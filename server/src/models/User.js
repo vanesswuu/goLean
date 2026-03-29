@@ -16,6 +16,17 @@ const userSchema = mongoose.Schema({
         required: true
     },
 
+    goal: {
+        type: String,
+        required: true,
+        default: 'general_health'
+    },
+    barrier: {
+        type: String,
+        required: true,
+        default: 'time'
+    },
+
     //TDEE fields
     age: { type: Number, required: true },
     gender: { type: String, required: true, enum: ['male', 'female', 'other'] },

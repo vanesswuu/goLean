@@ -19,7 +19,7 @@ const LoginScreen = () => {
             }
 
             const credentials = {
-                name, email, password
+                email, password
             }
 
             const result = await login(credentials);
@@ -32,6 +32,7 @@ const LoginScreen = () => {
     };
 
     return (
+        
         <View style={styles.container}>
 
             <Text style={styles.title}>goLean </Text>

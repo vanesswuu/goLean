@@ -8,10 +8,11 @@ const generateToken = require('../utils/generateToken');
 exports.signupUser = async (req, res, next) => {
 
 
-    const { name, email, password, age, gender,
+    const { name, email, password, goal, barrier, age, gender,
         weight, height, activityLevel } = req.body;
 
     try {
+
         const userExists = await User.findOne({ email });
 
         if (userExists) {
@@ -19,6 +20,8 @@ exports.signupUser = async (req, res, next) => {
             throw new Error('User already exists');
         }
 
+
+        // 2. We inject all 9 pieces of data directly into the database
         const user = await User.create({
             name, email, password, age, gender,
             weight, height, activityLevel
