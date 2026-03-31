@@ -24,7 +24,7 @@ exports.signupUser = async (req, res, next) => {
         // 2. We inject all 9 pieces of data directly into the database
         const user = await User.create({
             name, email, password, age, gender,
-            weight, height, activityLevel
+            weight, height, activityLevel, goal, barrier
         });
 
         if (user) {

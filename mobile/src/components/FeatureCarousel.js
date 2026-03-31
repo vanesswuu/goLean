@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 
 // import our data - the features in constants
-import welcome_features from '../constants/features';
+import welcome_feature from '../constants/features';
 
 // we need the screen width because the carousel needs
 //  to know exactly how wide to draw the slides
@@ -19,7 +19,7 @@ const FeatureCarousel = () => {
             autoPlay={true}       // Moves automatically
             autoPlayInterval={3000} // Waits 3 seconds per slide
             scrollAnimationDuration={1000} // Takes 1 second to slide
-            data={welcome_features}
+            data={welcome_feature}
             renderItem={({ item }) => ( //this loops through the data
                 <View style={styles.slide}>
                     {/* The Background Image */}
