@@ -32,7 +32,7 @@ export default function SummaryScreen({ navigation }) {
                     <Text style={styles.macroValue}>{plan.protein}g</Text>
                     <Text style={styles.macroLabel}>Protein</Text>
                 </View>
-                
+
                 <View style={[styles.macroCard, { borderTopColor: '#F1C40F' }]}>
                     <Text style={styles.macroValue}>{plan.carbs}g</Text>
                     <Text style={styles.macroLabel}>Carbs</Text>
@@ -45,7 +45,7 @@ export default function SummaryScreen({ navigation }) {
             </View>
 
             <TouchableOpacity style={styles.finishButton} onPress={() => navigation.navigate('Signup')}>
-                <Text style={styles.finishText}>Proceed to Account Setup</Text>
+                <Text style={styles.finishText}>Save and Go to Account Setup</Text>
             </TouchableOpacity>
         </ScrollView>
     );
