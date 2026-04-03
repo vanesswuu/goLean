@@ -3,7 +3,14 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, ScrollView, Alert } from
 import { signup } from '../services/authService';
 import { useOnboarding } from '../context/OnboardingContext';
 
+import { useAuth } from '../context/AuthContext';
+
+
+
 const SignupScreen = ({ navigation }) => {
+
+    const { login } = useAuth(); //the context
+
     // 1. Bring in the shopping cart and the clear function
     const { onboarding, clearData } = useOnboarding();
 
@@ -33,7 +40,7 @@ const SignupScreen = ({ navigation }) => {
             // 3. Clear the shopping cart since they've successfully signed up!
             clearData();
 
-            navigation.navigate('Main'); // Uncomment this later when you build the Dashboard
+            await login(result); //the context
 
         } catch (error) {
             Alert.alert('Signup Error', error.toString());

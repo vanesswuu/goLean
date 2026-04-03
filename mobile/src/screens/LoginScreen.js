@@ -3,12 +3,17 @@ import {
     StyleSheet, Text, View, TextInput,
     TouchableOpacity, Alert
 } from 'react-native';
-import { login } from '../services/authService';
+import { login as loginAPI } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
+
+
 
 const LoginScreen = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const { login } = useAuth(); //the context
 
     const handleLogin = async () => {
         try {
@@ -22,9 +27,10 @@ const LoginScreen = ({ navigation }) => {
                 email, password
             }
 
-            const result = await login(credentials);
+            const result = await loginAPI(credentials);
             Alert.alert('success!', `welcome back, ${result.name}`);
-            navigation.navigate('Main');
+
+            await login(result); //the context
 
         } catch (error) {
             Alert.alert('error', error);
