@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { login } from '../services/authService';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -24,7 +24,7 @@ const LoginScreen = () => {
 
             const result = await login(credentials);
             Alert.alert('success!', `welcome back, ${result.name}`);
-
+            navigation.navigate('Main');
 
         } catch (error) {
             Alert.alert('error', error);
@@ -32,7 +32,7 @@ const LoginScreen = () => {
     };
 
     return (
-        
+
         <View style={styles.container}>
 
             <Text style={styles.title}>goLean </Text>

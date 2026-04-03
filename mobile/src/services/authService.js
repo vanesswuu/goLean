@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://172.16.17.69:5000/api/auth';
+const API_URL = 'http://localhost:5000/api/auth';
 
 //service to handle all auth api calls
 

@@ -35,7 +35,7 @@ const userSchema = mongoose.Schema({
     activityLevel: {
         type: String,
         required: true,
-        enum: ['sedentary', 'light', 'moderate', 'heavy', 'athlete'],
+        enum: ['sedentary', 'lightly_active', 'moderately_active', 'very_active'],
         default: 'sedentary'
     }
 }, {

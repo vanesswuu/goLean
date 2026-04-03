@@ -1,8 +1,10 @@
-//this file handles the logic for switching between screens
+//this file handles the logic for switching between screens for login, signup and onboarding
 
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+
+import MainTabNavigator from './MainTabNavigator';
 
 //default screen imports
 import SignupScreen from '../screens/SignupScreen';
@@ -18,7 +20,7 @@ import ActivityScreen from '../screens/ActivityScreen';
 import MetricsScreen from '../screens/MetricsScreen';
 import SummaryScreen from '../screens/SummaryScreen';
 import EmpathyResponseScreen from '../screens/EmpathyResponseScreen';
-
+import DashboardScreen from '../screens/DashboardScreen';
 
 const Stack = createStackNavigator();
 
@@ -44,6 +46,12 @@ function AppNavigator() {
 
                 <Stack.Screen name="Summary" component={SummaryScreen} options={{ headerShown: true, title: '' }} />
                 <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: true, title: '' }} />
+
+
+                <Stack.Screen name="Main" component={MainTabNavigator} />
+
+
+
 
             </Stack.Navigator>
         </NavigationContainer>

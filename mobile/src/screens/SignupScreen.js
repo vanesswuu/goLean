@@ -33,7 +33,7 @@ const SignupScreen = ({ navigation }) => {
             // 3. Clear the shopping cart since they've successfully signed up!
             clearData();
 
-            // navigation.navigate('Dashboard'); // Uncomment this later when you build the Dashboard
+            navigation.navigate('Main'); // Uncomment this later when you build the Dashboard
 
         } catch (error) {
             Alert.alert('Signup Error', error.toString());
