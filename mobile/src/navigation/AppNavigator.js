@@ -43,7 +43,9 @@ function AppNavigator() {
             >
 
                 {user ?
-                    (<Stack.Screen name="Main" component={MainTabNavigator} />) :
+                    (
+                        <Stack.Screen name="Main" component={MainTabNavigator} />
+                    ) :
 
                     (
                         <>

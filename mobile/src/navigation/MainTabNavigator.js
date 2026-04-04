@@ -23,7 +23,8 @@ export default function MainTabNavigator() {
                 headerShown: false,
                 tabBarActiveTintColor: '#2ed573',
                 tabBarInactiveTintColor: '#a4b0be',
-                tabBarStyle: { height: 70, paddingBottom: 10 },
+                tabBarStyle: { height: 70, padding: 14 },
+                tabBarShowLabel: false,
                 tabBarIcon: ({ focused, color, size }) => {
 
                     let iconName;
@@ -31,7 +32,7 @@ export default function MainTabNavigator() {
                     else if (route.name === 'Add') iconName = 'add-circle';
                     else if (route.name === 'Dashboard') iconName = 'home';
 
-                    return <Ionicons name={iconName} size={30} color={color} />;
+                    return <Ionicons name={iconName} size={40} color={color} />;
 
 
                 }
