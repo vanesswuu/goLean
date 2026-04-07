@@ -67,8 +67,8 @@ export default function LogMealModal({ visible, onClose, onSave }) {
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
-            <View style={styles.overlay}>
-                <View style={styles.modalContainer}>
+            <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
+                <TouchableOpacity style={styles.modalContainer}>
                     <Text style={styles.title}>What's for {mealType}?</Text>
 
                     {/* SELECTOR */}
@@ -126,8 +126,8 @@ export default function LogMealModal({ visible, onClose, onSave }) {
                         </TouchableOpacity>
                     </View>
 
-                </View>
-            </View>
+                </TouchableOpacity>
+            </TouchableOpacity>
         </Modal>
     );
 

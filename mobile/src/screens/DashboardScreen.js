@@ -121,7 +121,7 @@ export default function DashboardScreen({ navigation }) {
                         <Text style={{ fontSize: 20, fontWeight: '900', color: '#2f3542' }}>Today's Log</Text>
 
                         <TouchableOpacity onPress={resetDay}>
-                            <Text style={{ color: '#ff4757', fontWeight: 'bold', fontSize: 13 }}>RESET DAY</Text>
+                            <Text style={{ color: '#ff4757', fontWeight: 'bold', fontSize: 15 }}>Day Finished</Text>
                         </TouchableOpacity>
                     </View>
 
