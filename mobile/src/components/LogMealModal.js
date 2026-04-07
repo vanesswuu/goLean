@@ -17,14 +17,17 @@ export default function LogMealModal({ visible, onClose, onSave }) {
     const handleAddFood = () => {
         if (!grams || isNaN(grams)) return Alert.alert('wait. please enter the grams');
 
-        const calorieDensity = FOOD_DB[currentFood] || 1.0;
-        const calculatedCals = Math.round(parseFloat(grams) * calorieDensity);
+        const food = FOOD_DB[currentFood] || 1.0;
+        const g = parseFloat(grams);
 
         const newItem = {
             id: Date.now(),
             name: currentFood,
             weight: grams,
-            cals: calculatedCals
+            kcals: Math.round(g * food.kcal),
+            p: Math.round(g * food.p),
+            c: Math.round(g * food.c),
+            f: Math.round(g * food.f)
         }
 
 
@@ -34,13 +37,12 @@ export default function LogMealModal({ visible, onClose, onSave }) {
 
 
     const handleLogFinalMeal = () => {
+
         if (itemsInMeal.length === 0) {
             Alert.alert('no food added');
             return;
         }
-        //calculate the total calories for this entire meal
-        const mealTotalCals = itemsInMeal.reduce((sum, item) =>
-            sum + item.cals, 0);
+
         //create the summary
         const summary = itemsInMeal.map(i => `${i.weight}g ${i.name}`).join(',');
 
@@ -49,7 +51,10 @@ export default function LogMealModal({ visible, onClose, onSave }) {
             id: Date.now().toString(),
             type: mealType,
             food: summary,
-            calories: mealTotalCals,
+            calories: itemsInMeal.reduce((sum, i) => sum + i.kcals, 0),
+            p: itemsInMeal.reduce((sum, i) => sum + i.p, 0),
+            c: itemsInMeal.reduce((sum, i) => sum + i.c, 0),
+            f: itemsInMeal.reduce((sum, i) => sum + i.f, 0),
             timestamp: new Date().toLocaleTimeString([],
                 { hour: '2-digit', minute: '2-digit' })
         });
@@ -75,7 +80,7 @@ export default function LogMealModal({ visible, onClose, onSave }) {
                         ))}
                     </View>
 
-                    {/* CALCULATOR */}
+
                     {/* CALCULATOR */}
                     <View style={styles.calculatorBox}>
                         <View style={styles.inputRow}>
@@ -107,7 +112,7 @@ export default function LogMealModal({ visible, onClose, onSave }) {
                         {itemsInMeal.map(item => (
                             <View key={item.id} style={styles.tempItem}>
                                 <Text>{item.weight}g {item.name}</Text>
-                                <Text style={{ fontWeight: 'bold' }}>{item.cals} kcal</Text>
+                                <Text style={{ fontWeight: 'bold' }}>{item.kcals} kcal</Text>
                             </View>
                         ))}
                     </ScrollView>

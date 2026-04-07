@@ -26,9 +26,15 @@ export default function DashboardScreen({ navigation }) {
     const [meals, setMeals] = useState([]);
     const [isModalVisible, setModalVisible] = useState(false);
 
-    //math logic: calculates daily total from the 'meals' array
-    const dailyConsumedTotal = meals.reduce((sum, item) =>
-        sum + item.calories, 0);
+    //math logic: calculates daily total cals from the 'meals' array
+    const dailyConsumedTotal = meals.reduce((sum, meal) =>
+        sum + (meal.calories || 0), 0);
+
+    //math logic for calculating daily macros
+    const dailyP = meals.reduce((sum, meal) => sum + (meal.p || 0), 0);
+    const dailyC = meals.reduce((sum, meal) => sum + (meal.c || 0), 0);
+    const dailyF = meals.reduce((sum, meal) => sum + (meal.f || 0), 0);
+
 
     const plan = calculateNutrition(
         user?.age,
@@ -44,6 +50,12 @@ export default function DashboardScreen({ navigation }) {
         const updatedMeals = [...meals, newMeal];
         setMeals(updatedMeals);
         await AsyncStorage.setItem('daily_meals', JSON.stringify(updatedMeals));
+        setModalVisible(false);
+    };
+
+    const resetDay = async () => {
+        setMeals([]);
+        await AsyncStorage.removeItem('daily_meals');
         setModalVisible(false);
     };
 
@@ -68,7 +80,12 @@ export default function DashboardScreen({ navigation }) {
         },
         {
             id: 'mac', component:
-                <MacroCircles plan={plan} />
+                <MacroCircles
+                    plan={plan}
+                    consumedP={dailyP}
+                    consumedC={dailyC}
+                    consumedF={dailyF}
+                />
         }
     ]
 
@@ -81,8 +98,7 @@ export default function DashboardScreen({ navigation }) {
 
                 <View style={styles.content}>
 
-                    <Text style={styles.welcomeText}>Hello, {user?.name}!</Text>
-
+                    {/* the carousel for the cals and macros*/}
                     <Carousel
                         loop={false}
                         width={width}
@@ -91,7 +107,7 @@ export default function DashboardScreen({ navigation }) {
                         renderItem={({ item }) =>
                             <DashboardCard>{item.component}</DashboardCard>}
                     />
-
+                    {/* log meal btn*/}
                     <TouchableOpacity style={styles.logButton}
                         onPress={() => setModalVisible(true)}
                     >
@@ -100,9 +116,16 @@ export default function DashboardScreen({ navigation }) {
 
                     </TouchableOpacity>
 
-                    {/* MEAL HISTORY LIST */}
-                    <Text style={styles.historyTitle}>Today's Log</Text>
+                    {/* meal history list */}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 30, marginTop: 30, marginBottom: 15 }}>
+                        <Text style={{ fontSize: 20, fontWeight: '900', color: '#2f3542' }}>Today's Log</Text>
 
+                        <TouchableOpacity onPress={resetDay}>
+                            <Text style={{ color: '#ff4757', fontWeight: 'bold', fontSize: 13 }}>RESET DAY</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* the foods logged today*/}
                     {meals.map((meal) => (
                         <View key={meal.id} style={styles.mealRecord}>
                             <View>

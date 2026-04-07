@@ -19,8 +19,10 @@ export default function NutrientCircle({ consumed, limit }) {
     // 502.65 * (1 - 0.8) = 100.53
     // Example: hide 20% of the circle → only 80% of green shows
 
-    const remaining = limit - consumed;
+    const remaining = Math.max(0, limit - consumed);
+    const surplus = Math.max(0, consumed - limit)
 
+    console.log(surplus);
 
     return (
         <View style={styles.container}>
@@ -59,8 +61,15 @@ export default function NutrientCircle({ consumed, limit }) {
                 <Text style={styles.caloriesText}>{remaining}</Text>
                 <Text style={styles.label}>Calories Left</Text>
             </View>
+            {surplus > 0 && (
+                <View style={styles.surplusBox}>
+                    <Text style={styles.surplusText}>
+                        You are {surplus} kcal over maintenance
+                    </Text>
+                </View>
+            )}        </View>
 
-        </View>
+
     );
 
 
@@ -70,5 +79,6 @@ const styles = StyleSheet.create({
     container: { alignItems: 'center', justifyContent: 'center', marginVertical: 30 },
     textContainer: { position: 'absolute', alignItems: 'center' },
     caloriesText: { fontSize: 42, fontWeight: '900', color: '#2f3542' },
-    label: { fontSize: 16, color: '#a4b0be', fontWeight: '500' }
+    label: { fontSize: 16, color: '#a4b0be', fontWeight: '500' },
+
 });

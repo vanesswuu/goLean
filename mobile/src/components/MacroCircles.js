@@ -6,8 +6,13 @@ const SmallCircle = ({ label, value, limit, color }) => {
 
     const radius = 35;
     const circumference = 2 * Math.PI * radius;
-    const progress = Math.min(1, value / limit);
-    const strokeDashoffset = circumference * (1 - progress);
+
+    // Calculate the "Fill" exactly like the big circle
+    const progress = Math.min(value / limit, 1);
+    // Cap at 100%
+    const strokeDashoffset = circumference - (progress * circumference);
+
+    const remaining = Math.max(0, limit - value);
 
     return (
 
@@ -39,7 +44,7 @@ const SmallCircle = ({ label, value, limit, color }) => {
             </Svg>
 
             <View style={styles.textOverlay}>
-                <Text style={styles.val}>{Math.round(value)}g</Text>
+                <Text style={styles.val}>{Math.round(remaining)}g</Text>
                 <Text style={styles.lab}>{label}</Text>
             </View>
 
@@ -48,28 +53,28 @@ const SmallCircle = ({ label, value, limit, color }) => {
 };
 
 
-export default function MacroCircles({ plan }) {
+export default function MacroCircles({ plan, consumedP, consumedC, consumedF }) {
     return (
 
         <View style={styles.container}>
 
             <SmallCircle
-                label="Prott"
-                value={plan.protein}
+                label="Prot"
+                value={consumedP}
                 limit={plan.protein}
                 color="#ff4757"
             />
 
             <SmallCircle
                 label="Carb"
-                value={plan.carbs}
+                value={consumedC}
                 limit={plan.carbs}
                 color="#2f3542"
             />
 
             <SmallCircle
                 label="Fat"
-                value={plan.fats}
+                value={consumedF}
                 limit={plan.fats}
                 color="#ffa502"
             />
