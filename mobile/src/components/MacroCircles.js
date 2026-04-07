@@ -48,6 +48,7 @@ const SmallCircle = ({ label, value, limit, color }) => {
                 <Text style={styles.lab}>{label}</Text>
             </View>
 
+
         </View>
     );
 };
@@ -58,26 +59,25 @@ export default function MacroCircles({ plan, consumedP, consumedC, consumedF }) 
 
         <View style={styles.container}>
 
-            <SmallCircle
-                label="Prot"
-                value={consumedP}
-                limit={plan.protein}
-                color="#ff4757"
-            />
+            {/* 1. THE ROW OF CIRCLES */}
+            <View style={styles.row}>
+                <SmallCircle label="Prot" value={consumedP} limit={plan.protein} color="#ff4757" />
+                <SmallCircle label="Carb" value={consumedC} limit={plan.carbs} color="#2f3542" />
+                <SmallCircle label="Fat" value={consumedF} limit={plan.fats} color="#ffa502" />
+            </View>
 
-            <SmallCircle
-                label="Carb"
-                value={consumedC}
-                limit={plan.carbs}
-                color="#2f3542"
-            />
-
-            <SmallCircle
-                label="Fat"
-                value={consumedF}
-                limit={plan.fats}
-                color="#ffa502"
-            />
+            {/* 2. THE SUCCESS MESSAGES */}
+            <View style={styles.messageList}>
+                {consumedP >= plan.protein && (
+                    <Text style={styles.successMsg}> You hit your protein goal!</Text>
+                )}
+                {consumedC >= plan.carbs && (
+                    <Text style={styles.successMsg}> You hit your carbs goal!</Text>
+                )}
+                {consumedF >= plan.fats && (
+                    <Text style={styles.successMsg}> You hit your fats goal!</Text>
+                )}
+            </View>
 
         </View>
 
@@ -86,7 +86,16 @@ export default function MacroCircles({ plan, consumedP, consumedC, consumedF }) 
 };
 
 const styles = StyleSheet.create({
-    container: { flexDirection: 'row', justifyContent: 'space-around', width: '100%' },
+    container: { alignItems: 'center', width: '100%' }, // Changed to column-based
+    row: { flexDirection: 'row', justifyContent: 'space-around', width: '100%', marginBottom: 20 },
+    messageList: { marginTop: 10, width: '100%', paddingHorizontal: 20 },
+    successMsg: {
+        color: '#2ed573',
+        fontWeight: 'bold',
+        fontSize: 13,
+        textAlign: 'center',
+        marginBottom: 5,
+    },
     item: { alignItems: 'center', justifyContent: 'center' },
     textOverlay: { position: 'absolute', alignItems: 'center' },
     val: { fontSize: 14, fontWeight: 'bold', color: '#2f3542' },

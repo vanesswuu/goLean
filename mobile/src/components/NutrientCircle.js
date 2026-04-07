@@ -61,14 +61,17 @@ export default function NutrientCircle({ consumed, limit }) {
                 <Text style={styles.caloriesText}>{remaining}</Text>
                 <Text style={styles.label}>Calories Left</Text>
             </View>
+
+            {/* surplus checker */}
             {surplus > 0 && (
                 <View style={styles.surplusBox}>
                     <Text style={styles.surplusText}>
                         You are {surplus} kcal over maintenance
                     </Text>
                 </View>
-            )}        </View>
+            )}
 
+        </View>
 
     );
 
