@@ -79,7 +79,8 @@ export default function DashboardScreen({ navigation }) {
                 />
         },
         {
-            id: 'mac', component:
+            id: 'mac',
+            component:
                 <MacroCircles
                     plan={plan}
                     consumedP={dailyP}

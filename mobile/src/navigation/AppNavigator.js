@@ -22,6 +22,9 @@ import SummaryScreen from '../screens/SummaryScreen';
 import EmpathyResponseScreen from '../screens/EmpathyResponseScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 
+
+//more options menu imports
+
 import { useAuth } from '../context/AuthContext';
 
 
@@ -44,7 +47,11 @@ function AppNavigator() {
 
                 {user ?
                     (
-                        <Stack.Screen name="Main" component={MainTabNavigator} />
+
+                        <>
+                            <Stack.Screen name="Main" component={MainTabNavigator} />
+                        </>
+
                     ) :
 
                     (
@@ -63,6 +70,9 @@ function AppNavigator() {
 
                             <Stack.Screen name="Summary" component={SummaryScreen} options={{ headerShown: true, title: '' }} />
                             <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: true, title: '' }} />
+
+
+
                         </>
                     )
 
