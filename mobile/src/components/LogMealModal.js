@@ -46,7 +46,7 @@ export default function LogMealModal({ visible, onClose, onSave }) {
         //create the summary
         const summary = itemsInMeal.map(i => `${i.weight}g ${i.name}`).join(',');
 
-        //send it home to dashboard
+        //send it home to dashboard //the payload to be added to meal state in dashboard
         onSave({
             id: Date.now().toString(),
             type: mealType,
@@ -68,7 +68,7 @@ export default function LogMealModal({ visible, onClose, onSave }) {
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
             <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
-                <TouchableOpacity style={styles.modalContainer}>
+                <TouchableOpacity style={styles.modalContainer} activeOpacity={1}>
                     <Text style={styles.title}>What's for {mealType}?</Text>
 
                     {/* SELECTOR */}

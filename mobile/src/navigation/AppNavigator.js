@@ -25,6 +25,7 @@ import DashboardScreen from '../screens/DashboardScreen';
 
 //more options menu imports
 
+
 import { useAuth } from '../context/AuthContext';
 
 
@@ -50,6 +51,7 @@ function AppNavigator() {
 
                         <>
                             <Stack.Screen name="Main" component={MainTabNavigator} />
+
                         </>
 
                     ) :

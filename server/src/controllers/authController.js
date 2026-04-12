@@ -36,6 +36,8 @@ exports.signupUser = async (req, res, next) => {
                 height: user.height,
                 weight: user.weight,
                 gender: user.gender,
+                activityLevel: user.activityLevel,
+                goal: user.goal,
                 token: generateToken(user._id),
 
             })
@@ -67,6 +69,8 @@ exports.loginUser = async (req, res, next) => {
                 gender: user.gender,
                 weight: user.weight,
                 height: user.height,
+                activityLevel: user.activityLevel,
+                goal: user.goal,
                 token: generateToken(user._id),
             })
         } else {

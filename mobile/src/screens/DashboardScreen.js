@@ -16,6 +16,12 @@ import LogMealModal from '../components/LogMealModal';
 import { useAuth } from '../context/AuthContext';
 import { calculateNutrition } from '../utils/calculations';
 
+//import daily logs service and get log data
+import { saveLogAPI } from '../services/logService';
+
+
+
+
 const { width } = Dimensions.get('window');
 
 export default function DashboardScreen({ navigation }) {
@@ -35,6 +41,17 @@ export default function DashboardScreen({ navigation }) {
     const dailyC = meals.reduce((sum, meal) => sum + (meal.c || 0), 0);
     const dailyF = meals.reduce((sum, meal) => sum + (meal.f || 0), 0);
 
+    const dailyIntakeTotal = {
+        dateString: new Date().toLocaleDateString('en-US', {
+            weekday: 'short', month: 'short', day: 'numeric'
+        }),
+        totalCals: dailyConsumedTotal,
+        protein: dailyP,
+        carbs: dailyC,
+        fats: dailyF,
+        meals: meals
+    }
+
 
     const plan = calculateNutrition(
         user?.age,
@@ -49,19 +66,34 @@ export default function DashboardScreen({ navigation }) {
     const handleSaveMeal = async (newMeal) => {
         const updatedMeals = [...meals, newMeal];
         setMeals(updatedMeals);
-        await AsyncStorage.setItem('daily_meals', JSON.stringify(updatedMeals));
+        await AsyncStorage.setItem(`daily_meals_${user.id}`, JSON.stringify(updatedMeals));
         setModalVisible(false);
     };
 
     const resetDay = async () => {
-        setMeals([]);
-        await AsyncStorage.removeItem('daily_meals');
-        setModalVisible(false);
+
+        if (meals.length === 0) {
+            console.log('no logged meals')
+            console.log(meals);
+            return;
+        }
+        try {
+            await saveLogAPI(dailyIntakeTotal, user.token) // the api call to post to daily logs
+            setMeals([]);
+            await AsyncStorage.removeItem(`daily_meals_${user.id}`);
+            setModalVisible(false);
+        } catch (error) {
+            console.log(error);
+        }
+
+
+
+
     };
 
     useEffect(() => {
         const loadMeals = async () => {
-            const saved = await AsyncStorage.getItem('daily_meals');
+            const saved = await AsyncStorage.getItem(`daily_meals_${user.id}`);
             if (saved) setMeals(JSON.parse(saved));
         };
         loadMeals();

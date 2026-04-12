@@ -6,7 +6,7 @@ const { errorHandler } = require('./middlewares/errorHandler');
 
 //import routes after dependencies imports
 const authRoutes = require('./routes/authRoutes');
-
+const logRoutes = require('./routes/logRoutes');
 
 
 
@@ -19,16 +19,7 @@ app.use(express.json());
 
 //mount routes after middlewares
 app.use('/api/auth', authRoutes);
-
-
-
-
-//this is a routes placeholder
-app.get('/', (req, res) => {
-    res.json({
-        message: 'welcome to goLean'
-    })
-})
+app.use('/api/logs', logRoutes);
 
 app.use(errorHandler);
 

@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 
 //more options imports
 import HistoryScreen from '../screens/HistoryScreen'
-
+import { useAuth } from '../context/AuthContext'
 
 import DashboardScreen from '../screens/DashboardScreen';
 
@@ -24,13 +24,16 @@ const Tab = createBottomTabNavigator();
 export default function MainTabNavigator() {
     const navigation = useNavigation();
 
+
+    const { logout } = useAuth();
     const [menuVisible, setMenuVisible] = useState(false);
+    const [plusVisible, setPlusVisible] = useState(false);
 
     return (
 
         <View style={{ flex: 1 }}>
 
-
+            {/*<<<<<<<<<<<<<<<  START OF TAB NAV    >>>>>>>>>>>>>>>>>>>> */}
             <Tab.Navigator
                 screenOptions={({ route }) => ({
                     headerShown: false,
@@ -56,7 +59,16 @@ export default function MainTabNavigator() {
                 <Tab.Screen name="Dashboard" component={DashboardScreen} />
 
                 {/*intercepted tabs, these dont go to screens, they open modals */}
-                <Tab.Screen name="Add" component={DashboardScreen} />
+                <Tab.Screen
+                    name="Add"
+                    component={DashboardScreen}
+                    listeners={{
+                        tabPress: (e) => {
+                            e.preventDefault();
+                            setPlusVisible(true);
+                        }
+                    }}
+                />
 
                 <Tab.Screen
                     name="More"
@@ -69,8 +81,9 @@ export default function MainTabNavigator() {
                     }}
                 />
 
+                {/*this tab is just hidden, i cant click it. but it holds the history screen component */}
                 <Tab.Screen
-                    name="Historyy"
+                    name="History"
                     component={HistoryScreen}
                     options={{
                         tabBarItemStyle: { display: 'none' },
@@ -80,6 +93,9 @@ export default function MainTabNavigator() {
                 />
 
             </Tab.Navigator>
+            {/*<<<<<<<<<<<<<<<   END OF TAB NAV    >>>>>>>>>>>>>>>>>>>> */}
+
+
 
             {/*modal for menus in more button */}
             <Modal
@@ -107,17 +123,25 @@ export default function MainTabNavigator() {
                             activeOpacity={1}
                             onPress={() => {
                                 setMenuVisible(false);
-                                navigation.navigate('Main', { screen: 'Historyy' });
+                                navigation.navigate('Main', { screen: 'History' });
                             }}
                         >
-                            <View style={styles.iconCircle}>
-                                <Ionicons name='time' size={22} color="#2f3542" />
-                            </View>
+
                             <Text style={styles.menuItemText}>My History</Text>
                             <Ionicons name="chevron-forward" size={18} color="#a4b0be" />
 
                         </TouchableOpacity>
 
+                        <TouchableOpacity
+                            style={styles.menuItemText}
+                            activeOpacity={1}
+                            onPress={() => {
+                                logout();
+                            }}
+
+                        >
+                            <Text>Logout</Text>
+                        </TouchableOpacity>
 
 
                     </View>
@@ -127,7 +151,57 @@ export default function MainTabNavigator() {
 
             </Modal>
 
-        </View>
+            {/*modal for plus button, run tracker modal */}
+            <Modal
+                visible={plusVisible}
+                transparent={true}
+                animationType='slide'
+                onRequestClose={() =>
+                    setPlusVisible(false)
+                }
+            >
+                <TouchableOpacity
+                    style={styles.modalOverlay}
+                    activeOpacity={1}
+                    onPress={() => setPlusVisible(false)}
+                >
+                    <View style={styles.menuContainer}>
+                        <View style={styles.handle} />
+                        <Text style={styles.menuTitle}>Choose Activity</Text>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+
+                            <TouchableOpacity
+                                style={styles.squareButton}
+                                onPress={() => {
+                                    setPlusVisible(false);
+                                    navigation.navigate('RunTracker');
+                                }}
+                            >
+                                <Ionicons name="fitness" size={40} color="#2ed573" />
+                                <Text style={styles.squareButtonText}>Run Tracker</Text>
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                                style={styles.squareButton}
+                                onPress={() => {
+                                    setAddMenuVisible(false);
+                                    // TBD: Link this to your second feature later
+                                }}
+                            >
+                                <Ionicons name="construct" size={40} color="#a4b0be" />
+                                <Text style={styles.squareButtonText}>Coming Soon</Text>
+                            </TouchableOpacity>
+
+                        </View>
+
+                    </View>
+
+                </TouchableOpacity>
+
+            </Modal>
+
+        </View >
     );
 }
 
@@ -153,4 +227,21 @@ const styles = StyleSheet.create({
     },
     iconCircle: { width: 40, height: 40, borderRadius: 20, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', marginRight: 15 },
     menuItemText: { flex: 1, fontSize: 16, fontWeight: 'bold', color: '#2f3542' },
+
+    squareButton: {
+        width: '48%',
+        aspectRatio: 1, // This forces it to be a perfect square!
+        backgroundColor: '#f8f9fa',
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20
+    },
+    squareButtonText: {
+        marginTop: 10,
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#2f3542',
+        textAlign: 'center'
+    }
 });

@@ -3,7 +3,11 @@ import {
     StyleSheet, Text, View, TextInput,
     TouchableOpacity, Alert
 } from 'react-native';
+
+//auth service
 import { login as loginAPI } from '../services/authService';
+
+//auth context to login and save user data to async storage
 import { useAuth } from '../context/AuthContext';
 
 
@@ -27,7 +31,9 @@ const LoginScreen = ({ navigation }) => {
                 email, password
             }
 
-            const result = await loginAPI(credentials);
+            //we can do an api call without storing it
+            //but we need the result to be passed to the login/authContext
+            const result = await loginAPI(credentials); //the api call //returns the user data
             Alert.alert('success!', `welcome back, ${result.name}`);
 
             await login(result); //the context
