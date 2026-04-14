@@ -4,6 +4,9 @@
     "slug": "mobile",
     "version": "1.0.0",
     "sdkVersion": "54.0.0",
+    "plugins": [
+      "@maplibre/maplibre-react-native"
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

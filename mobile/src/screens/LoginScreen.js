@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     StyleSheet, Text, View, TextInput,
     TouchableOpacity, Alert
@@ -15,9 +15,17 @@ import { useAuth } from '../context/AuthContext';
 const LoginScreen = ({ navigation }) => {
 
     const [email, setEmail] = useState('');
+    const emailRef = useRef(null);
     const [password, setPassword] = useState('');
 
     const { login } = useAuth(); //the context
+
+    useEffect(() => {
+
+        emailRef.current?.focus();
+
+    }, [])
+
 
     const handleLogin = async () => {
         try {
@@ -49,7 +57,7 @@ const LoginScreen = ({ navigation }) => {
 
             <Text style={styles.title}>goLean </Text>
 
-            <TextInput
+            <TextInput ref={emailRef}
                 style={styles.input} placeholder="Email"
                 value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none"
             />

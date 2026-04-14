@@ -26,6 +26,9 @@ import DashboardScreen from '../screens/DashboardScreen';
 //more options menu imports
 
 
+//imports for plus button modal
+import RunTrackerScreen from '../screens/RunTrackerScreen';
+
 import { useAuth } from '../context/AuthContext';
 
 
@@ -51,7 +54,9 @@ function AppNavigator() {
 
                         <>
                             <Stack.Screen name="Main" component={MainTabNavigator} />
-
+                            <Stack.Screen name="RunTracker" component={RunTrackerScreen}
+                                options={{ headerShown: true, title: 'Run Tracker' }}
+                            />
                         </>
 
                     ) :
