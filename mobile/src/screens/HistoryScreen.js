@@ -14,6 +14,9 @@ export default function HistoryScreen() {
     const [logs, setLogs] = useState([]);
     const [isLoading, setisLoading] = useState(true);
 
+    const [expandedId, setExpandedId] = useState(null);
+
+
     useEffect(() => {
         const loadLogs = async () => {
 
@@ -50,7 +53,8 @@ export default function HistoryScreen() {
                 renderItem={({ item }) => {
 
                     return (
-                        <View style={styles.logCard}>
+
+                        <TouchableOpacity style={styles.logCard} key={item._id} onPress={() => setExpandedId(item._id)}>
 
                             <View>
                                 <Text>{item.dateString}</Text>
@@ -58,7 +62,9 @@ export default function HistoryScreen() {
 
                             </View>
                             <Text>{item.totalCals} Cals</Text>
-                        </View>
+
+                        </TouchableOpacity>
+
                     )
                 }}
 

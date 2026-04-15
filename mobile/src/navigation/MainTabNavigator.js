@@ -133,7 +133,7 @@ export default function MainTabNavigator() {
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                            style={styles.menuItemText}
+                            style={styles.menuItem}
                             activeOpacity={1}
                             onPress={() => {
                                 logout();
@@ -171,27 +171,27 @@ export default function MainTabNavigator() {
 
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
-                            <TouchableOpacity
-                                style={styles.squareButton}
-                                onPress={() => {
-                                    setPlusVisible(false);
-                                    navigation.navigate('RunTracker');
-                                }}
-                            >
-                                <Ionicons name="fitness" size={40} color="#2ed573" />
-                                <Text style={styles.squareButtonText}>Run Tracker</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                style={styles.squareButton}
-                                onPress={() => {
-                                    setAddMenuVisible(false);
-                                    // TBD: Link this to your second feature later
-                                }}
-                            >
-                                <Ionicons name="construct" size={40} color="#a4b0be" />
-                                <Text style={styles.squareButtonText}>Coming Soon</Text>
-                            </TouchableOpacity>
+                            <View style={styles.squareRow}>
+                                <TouchableOpacity
+                                    style={styles.squareButton}
+                                    onPress={() => {
+                                        setPlusVisible(false);
+                                        navigation.navigate('RunTracker');
+                                    }}
+                                >
+                                    <Ionicons name="footsteps-outline" size={45} color="#2f3542" />
+                                    <Text style={styles.squareButtonText}>Run Tracker</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.squareButton}
+                                    onPress={() => {
+                                        setPlusVisible(false);
+                                    }}
+                                >
+                                    <Ionicons name="restaurant-outline" size={40} color="#2f3542" />
+                                    <Text style={styles.squareButtonText}>Log Meal</Text>
+                                </TouchableOpacity>
+                            </View>
 
                         </View>
 
@@ -243,5 +243,28 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#2f3542',
         textAlign: 'center'
-    }
+    },
+    squareRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginTop: 10,
+    },
+    squareButton: {
+        width: '48%',
+        aspectRatio: 1,
+        backgroundColor: '#f8f9fa', // Clean off-white
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#f1f2f6', // Very subtle border
+    },
+    squareButtonText: {
+        marginTop: 15,
+        fontSize: 15,
+        fontWeight: '700',
+        color: '#2f3542',
+        textAlign: 'center',
+    },
 });

@@ -67,18 +67,31 @@ export default function DashboardScreen({ navigation }) {
         const updatedMeals = [...meals, newMeal];
         setMeals(updatedMeals);
         await AsyncStorage.setItem(`daily_meals_${user.id}`, JSON.stringify(updatedMeals));
+        const dateToday = new Date().toDateString();
+        await AsyncStorage.setItem(`last_log_date${user.id}`, dateToday);
         setModalVisible(false);
     };
 
-    const resetDay = async () => {
+    const resetDay = async (existingMeals = null) => {
 
-        if (meals.length === 0) {
-            console.log('no logged meals')
-            console.log(meals);
-            return;
-        }
+        const mealsToLog = existingMeals || meals;
+
+        if (mealsToLog.length === 0) return;
+
+        const totals = {
+            dateString: new Date().toLocaleDateString('en-US', {
+                weekday: 'short', month: 'short', day: 'numeric'
+            }),
+            totalCals: mealsToLog.reduce((s, m) => s + (m.calories || 0), 0),
+            protein: mealsToLog.reduce((s, m) => s + (m.p || 0), 0),
+            carbs: mealsToLog.reduce((s, m) => s + (m.c || 0), 0),
+            fats: mealsToLog.reduce((s, m) => s + (m.f || 0), 0),
+            meals: mealsToLog
+        };
+
+
         try {
-            await saveLogAPI(dailyIntakeTotal, user.token) // the api call to post to daily logs
+            await saveLogAPI(totals, user.token) // the api call to post to daily logs
             setMeals([]);
             await AsyncStorage.removeItem(`daily_meals_${user.id}`);
             setModalVisible(false);
@@ -92,11 +105,29 @@ export default function DashboardScreen({ navigation }) {
     };
 
     useEffect(() => {
-        const loadMeals = async () => {
-            const saved = await AsyncStorage.getItem(`daily_meals_${user.id}`);
-            if (saved) setMeals(JSON.parse(saved));
-        };
-        loadMeals();
+
+
+        const loadDates = async () => {
+            const savedMeals = await AsyncStorage.getItem(`daily_meals_${user.id}`);
+            const lastDate = await AsyncStorage.getItem(`last_log_date${user.id}`)
+
+            const today = new Date().toDateString();
+
+            if (savedMeals) {
+                const parsed = JSON.parse(savedMeals);
+
+                if (lastDate && lastDate !== today) {
+                    await resetDay(parsed);
+                } else {
+                    setMeals(parsed)
+                }
+            }
+            await AsyncStorage.setItem(`last_log_date${user.id}`, today);
+
+        }
+
+
+        loadDates().catch(err => console.log("Init error:", err));
     }, []); // This runs "Once" when the app starts
 
 
@@ -158,6 +189,16 @@ export default function DashboardScreen({ navigation }) {
                         </TouchableOpacity>
                     </View>
 
+                    {meals.length === 0 && (
+                        <View style={styles.noLogContainer}>
+                            <View style={styles.noLogCircle}>
+                                <Text style={styles.noLogEmoji}>🍽️</Text>
+                            </View>
+                            <Text style={styles.noLogTitle}>No meals logged yet</Text>
+                            <Text style={styles.noLogSubtitle}>Your daily nutrition summary will appear here once you add your first meal.</Text>
+                        </View>
+                    )}
+
                     {/* the foods logged today*/}
                     {meals.map((meal) => (
                         <View key={meal.id} style={styles.mealRecord}>
@@ -195,7 +236,44 @@ const styles = StyleSheet.create({
     mealRecord: { backgroundColor: '#fff', flexDirection: 'row', justifyContent: 'space-between', padding: 20, marginHorizontal: 30, borderRadius: 20, marginBottom: 12, elevation: 2 },
     recordType: { fontSize: 12, fontWeight: '900', color: '#2ed573', textTransform: 'uppercase' },
     recordFood: { fontSize: 16, fontWeight: 'bold', color: '#2f3542', width: 170 },
-    recordCals: { fontSize: 20, fontWeight: '900', color: '#2f3542' }
+    recordCals: { fontSize: 20, fontWeight: '900', color: '#2f3542' },
+    noLogContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 25,
+        padding: 30,
+        marginHorizontal: 20,
+        marginTop: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderStyle: 'dashed',
+        borderWidth: 2,
+        borderColor: '#e0e0e0', // Subtle dashed border looks "ready for data"
+    },
+    noLogCircle: {
+        width: 70,
+        height: 70,
+        borderRadius: 35,
+        backgroundColor: '#f1f2f6',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    noLogEmoji: {
+        fontSize: 32,
+    },
+    noLogTitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        color: '#2f3542',
+        marginBottom: 8,
+    },
+    noLogSubtitle: {
+        fontSize: 14,
+        color: '#a4b0be',
+        textAlign: 'center',
+        lineHeight: 20,
+        paddingHorizontal: 20,
+    },
 });
 
 

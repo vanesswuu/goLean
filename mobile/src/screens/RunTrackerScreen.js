@@ -160,23 +160,27 @@ export default function RunTrackerScreen() {
                         )}
 
                     </MapLibreGL.MapView>
-                    
+
                 </View>
 
                 <View style={[styles.row, { marginTop: 20 }]}>
+                    
                     <View style={styles.statsBoxSmall}>
                         <Text style={styles.valueSmall}>{distance.toFixed(2)}</Text>
                         <Text style={styles.label}>KM</Text>
                     </View>
+                    
                     <View style={styles.statsBoxSmall}>
                         <Text style={styles.valueSmall}>{formatTime(timeElapsed)}</Text>
                         <Text style={styles.label}>Time</Text>
                     </View>
+              
                 </View>
 
                 <TouchableOpacity style={styles.btnReset} onPress={resetTracker}>
                     <Text style={styles.buttonText}>Done</Text>
                 </TouchableOpacity>
+           
             </View>
         );
     }
