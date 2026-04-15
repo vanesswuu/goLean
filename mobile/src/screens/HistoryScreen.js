@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 //service import
 import { getLogsAPI } from '../services/logService';
@@ -52,19 +53,77 @@ export default function HistoryScreen() {
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => {
 
+                    const dropdown = () => {
+                        setExpandedId(expandedId === item._id ? null : item._id)
+                    }
+
                     return (
+                        <>
+                            <TouchableOpacity style={styles.logCard} key={item._id} onPress={dropdown}  >
 
-                        <TouchableOpacity style={styles.logCard} key={item._id} onPress={() => setExpandedId(item._id)}>
+                                <View>
+                                    <Text>{item.dateString}</Text>
+                                    <Text style={styles.mealCount}>{item.meals.length} Meals</Text>
 
-                            <View>
-                                <Text>{item.dateString}</Text>
-                                <Text style={styles.mealCount}>{item.meals.length} Meals</Text>
+                                </View>
 
-                            </View>
-                            <Text>{item.totalCals} Cals</Text>
+                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                                    <Text>{item.totalCals} Cals</Text>
+                                    <Ionicons
+                                        name={expandedId === item._id ? 'chevron-up-outline' : 'chevron-down-outline'}
+                                        size={24}
+                                        color="grey"
+                                    />
+                                </View>
 
-                        </TouchableOpacity>
+                            </TouchableOpacity>
 
+                            {expandedId === item._id && (
+                                <View style={styles.dropdownContainer}>
+
+                                    {item.meals.map((meal, index) => (
+                                        <View key={meal.id || index} style={styles.mealCard}>
+
+                                            {/*  left Food Info */}
+                                            <View style={{ flex: 1 }}>
+
+                                                <Text style={styles.mealType}>{meal.type}</Text>
+
+                                                {(meal.food || '').split(',').map((foodItem, idx) => (
+                                                    <Text key={idx} style={styles.mealFood}>
+                                                        {foodItem.trim()}
+                                                    </Text>
+                                                ))}
+
+                                                <Text style={styles.mealCals}>{meal.calories} kcal</Text>
+
+                                            </View>
+
+                                            {/*  right Macro Breakdown */}
+                                            <View style={styles.macrosSection}>
+                                                <View style={styles.macroPill}>
+                                                    {/* Protein Label (Red-ish) */}
+                                                    <Text style={[styles.macroLabel, { color: '#ff4757' }]}>P</Text>
+                                                    <Text style={styles.macroValue}>{meal.p}g</Text>
+                                                </View>
+                                                <View style={styles.macroPill}>
+                                                    {/* Carbs Label (Dark Navy) */}
+                                                    <Text style={[styles.macroLabel, { color: '#2f3542' }]}>C</Text>
+                                                    <Text style={styles.macroValue}>{meal.c}g</Text>
+                                                </View>
+                                                <View style={styles.macroPill}>
+                                                    {/* Fats Label (Orange) */}
+                                                    <Text style={[styles.macroLabel, { color: '#ffa502' }]}>F</Text>
+                                                    <Text style={styles.macroValue}>{meal.f}g</Text>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    ))}
+
+                                </View>
+                            )}
+
+                        </>
                     )
                 }}
 
@@ -129,5 +188,66 @@ const styles = StyleSheet.create({
         color: '#a4b0be',
         fontSize: 16,
         fontWeight: 'bold'
-    }
+    },
+    dropdownContainer: {
+        backgroundColor: '#fff',
+        marginTop: -12,
+        marginBottom: 15,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+        paddingHorizontal: 15,
+        paddingBottom: 15,
+        paddingTop: 10,
+        elevation: 2,
+    },
+    // Each individual meal row
+    mealCard: {
+        backgroundColor: '#fff',
+        borderRadius: 18,
+        padding: 15,
+        marginTop: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        // Subtle border to separate from the dropdown background
+        borderWidth: 1,
+        borderColor: '#f1f2f6',
+    },
+    mealType: {
+        color: 'green',
+        fontSize: 15,
+        fontWeight: 'bold',
+    },
+    mealCals: {
+        color: 'green',
+        fontSize: 13,
+        fontWeight: 'bold',
+    },
+    macrosSection: {
+        flexDirection: 'column', // Change from 'row' to 'column'
+        gap: 4,
+        alignItems: 'flex-end',
+        paddingLeft: 10, // Give some breathing room to the text on the left
+    },
+    macroPill: {
+        backgroundColor: '#f1f2f6',
+        paddingVertical: 4,
+        paddingHorizontal: 10,
+        borderRadius: 8,
+        flexDirection: 'row', // Put the label and value side-by-side
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: 65, // Fixed width keeps them perfectly aligned
+    },
+    macroLabel: {
+        fontSize: 10,
+        fontWeight: '900',
+        color: '#a4b0be',
+        marginRight: 5,
+    },
+    macroValue: {
+        fontSize: 11,
+        fontWeight: 'bold',
+        color: '#2f3542',
+    },
 });

@@ -184,7 +184,7 @@ export default function DashboardScreen({ navigation }) {
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginHorizontal: 30, marginTop: 30, marginBottom: 15 }}>
                         <Text style={{ fontSize: 20, fontWeight: '900', color: '#2f3542' }}>Today's Log</Text>
 
-                        <TouchableOpacity onPress={resetDay}>
+                        <TouchableOpacity onPress={() => resetDay()}>
                             <Text style={{ color: '#ff4757', fontWeight: 'bold', fontSize: 15 }}>Day Finished</Text>
                         </TouchableOpacity>
                     </View>
@@ -200,13 +200,40 @@ export default function DashboardScreen({ navigation }) {
                     )}
 
                     {/* the foods logged today*/}
-                    {meals.map((meal) => (
-                        <View key={meal.id} style={styles.mealRecord}>
-                            <View>
+
+                    {meals.map((meal, index) => (
+                        <View key={meal.id || index} style={styles.mealRecord}>
+
+                            {/* Left Side: Type, Foods, and Calories */}
+                            <View style={{ flex: 1, paddingRight: 10 }}>
                                 <Text style={styles.recordType}>{meal.type}</Text>
-                                <Text style={styles.recordFood} numberOfLines={1}>{meal.food}</Text>
+
+                                {(meal.food || '').split(',').map((item, idx) => (
+                                    <Text key={idx} style={styles.recordFood}>
+                                        {item.trim()}
+                                    </Text>
+                                ))}
+
+                                <Text style={[styles.recordCals, { marginTop: 6, fontSize: 16 }]}>
+                                    + {meal.calories} kcal
+                                </Text>
                             </View>
-                            <Text style={styles.recordCals}>+{meal.calories} kcal</Text>
+                            {/* Right Side: Macro Breakdown Stack */}
+                            <View style={styles.macrosSection}>
+                                <View style={styles.macroPill}>
+                                    <Text style={[styles.macroLabel, { color: '#ff4757' }]}>P</Text>
+                                    <Text style={styles.macroValue}>{meal.p}g</Text>
+                                </View>
+                                <View style={styles.macroPill}>
+                                    <Text style={[styles.macroLabel, { color: '#2f3542' }]}>C</Text>
+                                    <Text style={styles.macroValue}>{meal.c}g</Text>
+                                </View>
+                                <View style={styles.macroPill}>
+                                    <Text style={[styles.macroLabel, { color: '#ffa502' }]}>F</Text>
+                                    <Text style={styles.macroValue}>{meal.f}g</Text>
+                                </View>
+                            </View>
+
                         </View>
                     ))}
 
@@ -234,9 +261,35 @@ const styles = StyleSheet.create({
     logButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold', marginLeft: 10 },
     historyTitle: { fontSize: 20, fontWeight: '900', color: '#2f3542', marginHorizontal: 30, marginTop: 30, marginBottom: 15 },
     mealRecord: { backgroundColor: '#fff', flexDirection: 'row', justifyContent: 'space-between', padding: 20, marginHorizontal: 30, borderRadius: 20, marginBottom: 12, elevation: 2 },
-    recordType: { fontSize: 12, fontWeight: '900', color: '#2ed573', textTransform: 'uppercase' },
-    recordFood: { fontSize: 16, fontWeight: 'bold', color: '#2f3542', width: 170 },
+    recordType: { fontSize: 18, fontWeight: '900', textTransform: 'uppercase' },
+    recordFood: { fontSize: 13, color: '#2f3542', width: 170 },
     recordCals: { fontSize: 20, fontWeight: '900', color: '#2f3542' },
+    macrosSection: {
+        flexDirection: 'column',
+        gap: 5,
+        alignItems: 'flex-end',
+        justifyContent: 'center', // Centers the pills vertically in the card
+    },
+    macroPill: {
+        backgroundColor: '#f1f2f6',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 8,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: 65,
+    },
+    macroLabel: {
+        fontSize: 10,
+        fontWeight: '900',
+        marginRight: 5,
+    },
+    macroValue: {
+        fontSize: 11,
+        fontWeight: 'bold',
+        color: '#2f3542',
+    },
     noLogContainer: {
         backgroundColor: '#fff',
         borderRadius: 25,
