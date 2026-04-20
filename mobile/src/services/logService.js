@@ -3,7 +3,7 @@
 
 import axios from 'axios';
 
-const API_URL = 'http://10.0.2.2:5000/api/logs';
+const API_URL = 'http://192.168.1.9:5000/api/logs';
 
 export const saveLogAPI = async (logData, token) => {
 
@@ -13,7 +13,6 @@ export const saveLogAPI = async (logData, token) => {
     return res.data;
 
 }
-
 
 export const getLogsAPI = async (token) => {
     const res = await axios.get(API_URL, {

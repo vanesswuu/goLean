@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-//our carousel component
 import FeatureCarousel from '../components/FeatureCarousel';
 
 const WelcomeScreen = ({ navigation }) => {
@@ -11,9 +10,11 @@ const WelcomeScreen = ({ navigation }) => {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }} style={styles.container}>
 
 
+
             <View style={styles.carouselContainer}>
                 <FeatureCarousel />
             </View>
+
 
             <View style={styles.bottomContainer}>
 

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
-import Carousel from 'react-native-reanimated-carousel';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, FlatList } from 'react-native';//import Carousel from 'react-native-reanimated-carousel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -99,9 +98,6 @@ export default function DashboardScreen({ navigation }) {
             console.log(error);
         }
 
-
-
-
     };
 
     useEffect(() => {
@@ -162,15 +158,21 @@ export default function DashboardScreen({ navigation }) {
 
                 <View style={styles.content}>
 
-                    {/* the carousel for the cals and macros*/}
-                    <Carousel
-                        loop={false}
-                        width={width}
-                        height={420}
+                    {/* FlatList carousel for cals and macros */}
+                    <FlatList
                         data={slides}
-                        renderItem={({ item }) =>
-                            <DashboardCard>{item.component}</DashboardCard>}
+                        horizontal
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
+                            <View style={{ width }}>
+                                <DashboardCard>{item.component}</DashboardCard>
+                            </View>
+                        )}
+                        style={{ maxHeight: 420 }}
                     />
+
                     {/* log meal btn*/}
                     <TouchableOpacity style={styles.logButton}
                         onPress={() => setModalVisible(true)}

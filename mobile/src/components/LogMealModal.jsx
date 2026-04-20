@@ -39,8 +39,10 @@ export default function LogMealModal({ visible, onClose, onSave }) {
     const handleLogFinalMeal = () => {
 
         if (itemsInMeal.length === 0) {
+
             Alert.alert('no food added');
             return;
+
         }
 
         //create the summary

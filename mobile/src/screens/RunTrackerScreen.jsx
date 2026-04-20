@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
 import * as Location from 'expo-location';
-import MapLibreGL from '@maplibre/maplibre-react-native';
+import MapView, { Polyline, Marker } from 'react-native-maps'; // 1. Import Maps
 import { calculateDistance } from '../utils/calculations';
-
-// This is a free demo style that doesn't require a key or credit card.
-const MAP_STYLE = 'https://demotiles.maplibre.org/style.json';
 
 export default function RunTrackerScreen() {
     const [isRunning, setIsRunning] = useState(false);
-    const [isFinished, setIsFinished] = useState(false);
+    const [isFinished, setIsFinished] = useState(false); // 2. New state for Summary
 
     const [timeElapsed, setTimeElapsed] = useState(0);
     const [distance, setDistance] = useState(0);
     const [speed, setSpeed] = useState(0);
-    const [route, setRoute] = useState([]);
+    const [route, setRoute] = useState([]); // 3. New state to store every coordinate
 
-    const timerRef = useRef(null);
+    const timerRef = useRef(null); //interval id
     const locationRef = useRef(null);
-    const lastPosRef = useRef(null);
+    const lastPosRef = useRef(null); //last position, to track distance. accumulated from every prev dist
 
     useEffect(() => {
         (async () => {
@@ -29,12 +26,15 @@ export default function RunTrackerScreen() {
         })();
     }, []);
 
+    //to format time in minutes and seconds
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60).toString().padStart(2, '0');
         const s = (seconds % 60).toString().padStart(2, '0');
         return `${m}:${s}`;
     };
 
+
+    //to start and stop run
     const toggleRun = async () => {
         if (!isRunning) {
             setIsRunning(true);
@@ -43,9 +43,7 @@ export default function RunTrackerScreen() {
             timerRef.current = setInterval(() => {
                 setTimeElapsed((prev) => {
                     const newTime = prev + 1;
-                    // Prevent divide by zero
-                    const hours = newTime / 3600;
-                    setSpeed(hours > 0 ? (distance / hours).toFixed(2) : "0.00");
+                    setSpeed((distance / (newTime / 3600)).toFixed(2));
                     return newTime;
                 });
             }, 1000);
@@ -57,9 +55,11 @@ export default function RunTrackerScreen() {
                     distanceInterval: 1
                 },
                 (location) => {
+                    
                     const { latitude, longitude } = location.coords;
                     const newPos = { latitude, longitude };
 
+                    // 4. Update the breadcrumb trail
                     setRoute((prev) => [...prev, newPos]);
 
                     if (lastPosRef.current) {
@@ -84,8 +84,9 @@ export default function RunTrackerScreen() {
         }
     };
 
+    //to finish run session
     const finishRun = () => {
-        setIsFinished(true);
+        setIsFinished(true); // 5. Toggle to Map Summary
         setIsRunning(false);
         clearInterval(timerRef.current);
         if (locationRef.current) {
@@ -93,6 +94,7 @@ export default function RunTrackerScreen() {
         }
     }
 
+    //to click done amd save run and reset tracker
     const resetTracker = () => {
         setDistance(0);
         setTimeElapsed(0);
@@ -102,90 +104,85 @@ export default function RunTrackerScreen() {
         lastPosRef.current = null;
     }
 
-    // SUMMARY VIEW (MAP)
+    // 6. Conditional Rendering: Show Map if Finished, otherwise show Tracker
     if (isFinished) {
         return (
             <View style={styles.container}>
+
                 <Text style={styles.headerTitle}>Run Summary</Text>
 
+                {/*the map sumaary */}
                 <View style={styles.mapContainer}>
 
-                    <MapLibreGL.MapView
+                    <MapView
                         style={styles.map}
-                        styleURL={MAP_STYLE}
-                        logoEnabled={false}
-                        attributionEnabled={false}
+                        initialRegion={{
+                            latitude: route.length > 0 ? route[0].latitude : 0,
+                            longitude: route.length > 0 ? route[0].longitude : 0,
+                            latitudeDelta: 0.01,
+                            longitudeDelta: 0.01,
+                        }}
                     >
-                        <MapLibreGL.Camera
-                            zoomLevel={15}
-                            centerCoordinate={[route[0]?.longitude || 0, route[0]?.latitude || 0]}
-                            animationMode={'flyTo'}
-                            animationDuration={2000}
-                        />
-
-                        {/* The Trail */}
-                        <MapLibreGL.ShapeSource id="routeSource" shape={{
-                            type: 'Feature',
-                            geometry: {
-                                type: 'LineString',
-                                coordinates: route.map(p => [p.longitude, p.latitude])
-                            }
-                        }}>
-                            <MapLibreGL.LineLayer id="routeLayer" style={{
-                                lineColor: '#2ed573',
-                                lineWidth: 6,
-                                lineJoin: 'round',
-                                lineCap: 'round'
-                            }} />
-                        </MapLibreGL.ShapeSource>
-
-                        {/* Start Point */}
+                        {/*  <Polyline>. 
+                            This takes our GPS array normally and draws
+                             the green snake line. */}
                         {route.length > 0 && (
-                            <MapLibreGL.PointAnnotation
-                                id="start"
-                                coordinate={[route[0].longitude, route[0].latitude]}
+                            <Polyline
+                                coordinates={route}
+                                strokeColor="#2ed573"
+                                strokeWidth={6}
+                                lineCap="round"
+                                lineJoin="round"
+                            />
+                        )}
+
+                        {/*  <Marker> tags. 
+                            We still wrap custom styles.dot inside it so 
+                            it looks identical to before. */}
+                        {route.length > 0 && (
+                            <Marker
+                                coordinate={route[0]}
+                                title="Start"
                             >
                                 <View style={[styles.dot, { backgroundColor: '#2ed573' }]} />
-                            </MapLibreGL.PointAnnotation>
+                            </Marker>
                         )}
 
-                        {/* End Point */}
                         {route.length > 1 && (
-                            <MapLibreGL.PointAnnotation
-                                id="end"
-                                coordinate={[route[route.length - 1].longitude, route[route.length - 1].latitude]}
+                            <Marker
+                                coordinate={route[route.length - 1]}
+                                title="End"
                             >
                                 <View style={[styles.dot, { backgroundColor: '#ff4757' }]} />
-                            </MapLibreGL.PointAnnotation>
+                            </Marker>
                         )}
 
-                    </MapLibreGL.MapView>
+                    </MapView>
+
 
                 </View>
 
                 <View style={[styles.row, { marginTop: 20 }]}>
-                    
+
                     <View style={styles.statsBoxSmall}>
                         <Text style={styles.valueSmall}>{distance.toFixed(2)}</Text>
                         <Text style={styles.label}>KM</Text>
                     </View>
-                    
                     <View style={styles.statsBoxSmall}>
                         <Text style={styles.valueSmall}>{formatTime(timeElapsed)}</Text>
                         <Text style={styles.label}>Time</Text>
                     </View>
-              
+
                 </View>
 
                 <TouchableOpacity style={styles.btnReset} onPress={resetTracker}>
                     <Text style={styles.buttonText}>Done</Text>
                 </TouchableOpacity>
-           
+
             </View>
         );
     }
 
-    // TRACKER VIEW (DASHBOARD)
     return (
         <View style={styles.container}>
             <View style={styles.statsBox}>
@@ -208,7 +205,7 @@ export default function RunTrackerScreen() {
                 style={[styles.button, isRunning ? styles.btnStop : styles.btnStart]}
                 onPress={toggleRun}
             >
-                <Text style={styles.buttonText}>{isRunning ? 'Pause' : 'Start'}</Text>
+                <Text style={styles.buttonText}>{isRunning ? '| |' : 'Start'}</Text>
             </TouchableOpacity>
 
             {!isRunning && timeElapsed > 0 && (
@@ -241,8 +238,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         overflow: 'hidden',
         borderWidth: 1,
-        borderColor: '#eee',
-        backgroundColor: '#e0e0e0'
+        borderColor: '#ddd'
     },
     map: { flex: 1 },
     dot: {
