@@ -4,7 +4,19 @@ import * as Location from 'expo-location';
 import MapView, { Polyline, Marker } from 'react-native-maps'; // 1. Import Maps
 import { calculateDistance } from '../utils/calculations';
 
+//utils
+import { formatTime } from '../utils/runCalculations';
+
+//service
+import { saveRunAPI } from '../services/runLogService';
+
+//auth context
+import { useAuth } from '../context/AuthContext';
+
 export default function RunTrackerScreen() {
+
+    const { user } = useAuth();
+
     const [isRunning, setIsRunning] = useState(false);
     const [isFinished, setIsFinished] = useState(false); // 2. New state for Summary
 
@@ -26,21 +38,13 @@ export default function RunTrackerScreen() {
         })();
     }, []);
 
-    //to format time in minutes and seconds
-    const formatTime = (seconds) => {
-        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-        const s = (seconds % 60).toString().padStart(2, '0');
-        return `${m}:${s}`;
-    };
-
-
     //to start and stop run
     const toggleRun = async () => {
         if (!isRunning) {
             setIsRunning(true);
             setIsFinished(false);
 
-            timerRef.current = setInterval(() => {
+            timerRef.current = setInterval(() => {   //interval id
                 setTimeElapsed((prev) => {
                     const newTime = prev + 1;
                     setSpeed((distance / (newTime / 3600)).toFixed(2));
@@ -55,7 +59,7 @@ export default function RunTrackerScreen() {
                     distanceInterval: 1
                 },
                 (location) => {
-                    
+
                     const { latitude, longitude } = location.coords;
                     const newPos = { latitude, longitude };
 
@@ -76,11 +80,13 @@ export default function RunTrackerScreen() {
             );
 
         } else {
+
             setIsRunning(false);
             clearInterval(timerRef.current);
             if (locationRef.current) {
                 locationRef.current.remove();
             }
+
         }
     };
 
@@ -95,13 +101,34 @@ export default function RunTrackerScreen() {
     }
 
     //to click done amd save run and reset tracker
-    const resetTracker = () => {
-        setDistance(0);
-        setTimeElapsed(0);
-        setSpeed(0);
-        setRoute([]);
-        setIsFinished(false);
-        lastPosRef.current = null;
+    const resetTracker = async () => {
+
+        const runData = {
+            distance,
+            timeElapsed,
+            speed,
+            date: new Date().toLocaleDateString('en-US', {
+                weekday: 'short', month: 'short', day: 'numeric'
+            }),
+        };
+        try {
+            await saveRunAPI(runData, user.token);
+            setDistance(0);
+            setTimeElapsed(0);
+            setSpeed(0);
+            setRoute([]);
+            setIsFinished(false);
+            lastPosRef.current = null;
+            Alert.alert("Run Session saved to history");
+
+        } catch (error) { //tweak,fix and study error here
+            console.error("Save failed:", error);
+            Alert.alert("Error", "Could not save your run. Please try again.");
+        }
+
+
+
+
     }
 
     // 6. Conditional Rendering: Show Map if Finished, otherwise show Tracker
