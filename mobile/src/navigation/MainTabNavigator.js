@@ -48,7 +48,7 @@ export default function MainTabNavigator() {
                         else if (route.name === 'Add') iconName = 'add-circle';
                         else if (route.name === 'Dashboard') iconName = 'home';
 
-                        return <Ionicons name={iconName} size={40} color={color} />;
+                        return <Ionicons name={iconName} size={30} color={color} />;
 
 
                     }

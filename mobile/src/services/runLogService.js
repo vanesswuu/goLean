@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://192.168.1.9:5000/api/runs';
+const API_URL = 'http://192.168.254.122:5000/api/runs';
 
 export const saveRunAPI = async (logData, token) => {
 
