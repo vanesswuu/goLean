@@ -11,6 +11,9 @@ export default function HistoryToggle({ activeTab, onTabChange }) {
 
         <View style={styles.toggleContainer}>
 
+
+
+
             <TouchableOpacity
                 style={[styles.toggleBtn, activeTab === 'meals'
                     && styles.activeToggle]}
@@ -24,15 +27,22 @@ export default function HistoryToggle({ activeTab, onTabChange }) {
 
             </TouchableOpacity>
 
+
+
+
             <TouchableOpacity
                 style={[styles.toggleBtn, activeTab === 'runs' && styles.activeToggle]}
                 onPress={() => {
                     if (activeTab !== 'runs') onTabChange('runs');
                 }}
             >
-                <Ionicons name='walk' size={20} color={activeTab === 'runs' ? '#fff' : '#a4b0be'} />
+                <Ionicons name='walk' size={30} color={activeTab === 'runs' ? '#fff' : '#a4b0be'} />
                 <Text style={[styles.toggleText, activeTab === 'runs' && styles.activeToggleText]}>Runs</Text>
             </TouchableOpacity>
+
+
+
+
         </View>
     );
 
