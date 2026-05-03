@@ -1,5 +1,7 @@
-import { React } from 'react';
-import { View, Text, Stylesheet } from 'react-native';
+//meal card in today's log in dashboard screen
+
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
 export default function DashboardMealCard({ meal }) {
     return (
@@ -10,8 +12,8 @@ export default function DashboardMealCard({ meal }) {
 
                 <Text style={styles.recordType}>{meal.type}</Text>
                 {(meal.food || '').split(',').map((item, idx) => (
-                    <Text key={idx} styles={styles.recordFood}>{item.trim()}</Text>
-                ))};
+                    <Text key={idx} style={styles.recordFood}>{item.trim()}</Text>
+                ))}
 
                 <Text style={styles.recordCals}>+ {meal.calories} kcal</Text>
 
@@ -19,9 +21,9 @@ export default function DashboardMealCard({ meal }) {
 
             <View style={styles.macrosSection}>
 
-                <Macropill label='P' value={meal.p} color='#ff4757' />
-                <Macropill label='C' value={meal.c} color="#2f3542" />
-                <Macropill label='F' value={meal.f} color="#ffa502" />
+                <MacroPill label='P' value={meal.p} color='#ff4757' />
+                <MacroPill label='C' value={meal.c} color="#2f3542" />
+                <MacroPill label='F' value={meal.f} color="#ffa502" />
 
             </View>
 

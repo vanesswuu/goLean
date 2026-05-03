@@ -10,6 +10,8 @@ import DashboardCard from '../components/DashboardCard';
 import NutrientCircle from '../components/NutrientCircle';
 import MacroCircles from '../components/MacroCircles';
 import LogMealModal from '../components/LogMealModal';
+import DashboardMealCard from '../components/dashboard/DashboardMealCard';
+import DashboardEmptyState from '../components/dashboard/DashboardEmptyState';
 
 //context and logic
 import { useAuth } from '../context/AuthContext';
@@ -17,9 +19,6 @@ import { calculateNutrition } from '../utils/calculations';
 
 //import daily logs service and get log data
 import { saveLogAPI } from '../services/logService';
-
-
-
 
 const { width } = Dimensions.get('window');
 
@@ -191,52 +190,14 @@ export default function DashboardScreen({ navigation }) {
                         </TouchableOpacity>
                     </View>
 
-                    {meals.length === 0 && (
-                        <View style={styles.noLogContainer}>
-                            <View style={styles.noLogCircle}>
-                                <Text style={styles.noLogEmoji}>🍽️</Text>
-                            </View>
-                            <Text style={styles.noLogTitle}>No meals logged yet</Text>
-                            <Text style={styles.noLogSubtitle}>Your daily nutrition summary will appear here once you add your first meal.</Text>
-                        </View>
-                    )}
+                    {/* the empty state (no foog logged)*/}
+
+                    {meals.length === 0 && <DashboardEmptyState />}
 
                     {/* the foods logged today*/}
 
                     {meals.map((meal, index) => (
-                        <View key={meal.id || index} style={styles.mealRecord}>
-
-                            {/* Left Side: Type, Foods, and Calories */}
-                            <View style={{ flex: 1, paddingRight: 10 }}>
-                                <Text style={styles.recordType}>{meal.type}</Text>
-
-                                {(meal.food || '').split(',').map((item, idx) => (
-                                    <Text key={idx} style={styles.recordFood}>
-                                        {item.trim()}
-                                    </Text>
-                                ))}
-
-                                <Text style={[styles.recordCals, { marginTop: 6, fontSize: 16 }]}>
-                                    + {meal.calories} kcal
-                                </Text>
-                            </View>
-                            {/* Right Side: Macro Breakdown Stack */}
-                            <View style={styles.macrosSection}>
-                                <View style={styles.macroPill}>
-                                    <Text style={[styles.macroLabel, { color: '#ff4757' }]}>P</Text>
-                                    <Text style={styles.macroValue}>{meal.p}g</Text>
-                                </View>
-                                <View style={styles.macroPill}>
-                                    <Text style={[styles.macroLabel, { color: '#2f3542' }]}>C</Text>
-                                    <Text style={styles.macroValue}>{meal.c}g</Text>
-                                </View>
-                                <View style={styles.macroPill}>
-                                    <Text style={[styles.macroLabel, { color: '#ffa502' }]}>F</Text>
-                                    <Text style={styles.macroValue}>{meal.f}g</Text>
-                                </View>
-                            </View>
-
-                        </View>
+                        <DashboardMealCard key={meal.id || index} meal={meal} />
                     ))}
 
                 </View>
@@ -262,73 +223,6 @@ const styles = StyleSheet.create({
     logButton: { backgroundColor: '#2ed573', flexDirection: 'row', padding: 20, marginHorizontal: 30, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginTop: 15, elevation: 5 },
     logButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold', marginLeft: 10 },
     historyTitle: { fontSize: 20, fontWeight: '900', color: '#2f3542', marginHorizontal: 30, marginTop: 30, marginBottom: 15 },
-    mealRecord: { backgroundColor: '#fff', flexDirection: 'row', justifyContent: 'space-between', padding: 20, marginHorizontal: 30, borderRadius: 20, marginBottom: 12, elevation: 2 },
-    recordType: { fontSize: 18, fontWeight: '900', textTransform: 'uppercase' },
-    recordFood: { fontSize: 13, color: '#2f3542', width: 170 },
-    recordCals: { fontSize: 20, fontWeight: '900', color: '#2f3542' },
-    macrosSection: {
-        flexDirection: 'column',
-        gap: 5,
-        alignItems: 'flex-end',
-        justifyContent: 'center', // Centers the pills vertically in the card
-    },
-    macroPill: {
-        backgroundColor: '#f1f2f6',
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        borderRadius: 8,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: 65,
-    },
-    macroLabel: {
-        fontSize: 10,
-        fontWeight: '900',
-        marginRight: 5,
-    },
-    macroValue: {
-        fontSize: 11,
-        fontWeight: 'bold',
-        color: '#2f3542',
-    },
-    noLogContainer: {
-        backgroundColor: '#fff',
-        borderRadius: 25,
-        padding: 30,
-        marginHorizontal: 20,
-        marginTop: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderStyle: 'dashed',
-        borderWidth: 2,
-        borderColor: '#e0e0e0', // Subtle dashed border looks "ready for data"
-    },
-    noLogCircle: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        backgroundColor: '#f1f2f6',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 15,
-    },
-    noLogEmoji: {
-        fontSize: 32,
-    },
-    noLogTitle: {
-        fontSize: 18,
-        fontWeight: '700',
-        color: '#2f3542',
-        marginBottom: 8,
-    },
-    noLogSubtitle: {
-        fontSize: 14,
-        color: '#a4b0be',
-        textAlign: 'center',
-        lineHeight: 20,
-        paddingHorizontal: 20,
-    },
 });
 
 
