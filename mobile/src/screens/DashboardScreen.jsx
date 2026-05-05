@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, FlatL
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
+//hooks
+import { useDashboardData } from '../hooks/useDashboardData';
 
 //component imports
 import DashboardHeader from '../components/DashboardHeader';
@@ -26,105 +28,9 @@ export default function DashboardScreen({ navigation }) {
 
     const { user } = useAuth();
 
-    //the master list, starts empty, holds all meals logged today
-    const [meals, setMeals] = useState([]);
-    const [isModalVisible, setModalVisible] = useState(false);
-
-    //math logic: calculates daily total cals from the 'meals' array
-    const dailyConsumedTotal = meals.reduce((sum, meal) =>
-        sum + (meal.calories || 0), 0);
-
-    //math logic for calculating daily macros
-    const dailyP = meals.reduce((sum, meal) => sum + (meal.p || 0), 0);
-    const dailyC = meals.reduce((sum, meal) => sum + (meal.c || 0), 0);
-    const dailyF = meals.reduce((sum, meal) => sum + (meal.f || 0), 0);
-
-    const dailyIntakeTotal = {
-        dateString: new Date().toLocaleDateString('en-US', {
-            weekday: 'short', month: 'short', day: 'numeric'
-        }),
-        totalCals: dailyConsumedTotal,
-        protein: dailyP,
-        carbs: dailyC,
-        fats: dailyF,
-        meals: meals
-    }
-
-
-    const plan = calculateNutrition(
-        user?.age,
-        user?.weight,
-        user?.height,
-        user?.gender,
-        user?.activityLevel,
-        user?.goal
-    );
-
-    //logging logic - saving a whole meal to the list
-    const handleSaveMeal = async (newMeal) => {
-        const updatedMeals = [...meals, newMeal];
-        setMeals(updatedMeals);
-        await AsyncStorage.setItem(`daily_meals_${user.id}`, JSON.stringify(updatedMeals));
-        const dateToday = new Date().toDateString();
-        await AsyncStorage.setItem(`last_log_date${user.id}`, dateToday);
-        setModalVisible(false);
-    };
-
-    const resetDay = async (existingMeals = null) => {
-
-        const mealsToLog = existingMeals || meals;
-
-        if (mealsToLog.length === 0) return;
-
-        const totals = {
-            dateString: new Date().toLocaleDateString('en-US', {
-                weekday: 'short', month: 'short', day: 'numeric'
-            }),
-            totalCals: mealsToLog.reduce((s, m) => s + (m.calories || 0), 0),
-            protein: mealsToLog.reduce((s, m) => s + (m.p || 0), 0),
-            carbs: mealsToLog.reduce((s, m) => s + (m.c || 0), 0),
-            fats: mealsToLog.reduce((s, m) => s + (m.f || 0), 0),
-            meals: mealsToLog
-        };
-
-
-        try {
-            await saveLogAPI(totals, user.token) // the api call to post to daily logs
-            setMeals([]);
-            await AsyncStorage.removeItem(`daily_meals_${user.id}`);
-            setModalVisible(false);
-        } catch (error) {
-            console.log(error);
-        }
-
-    };
-
-    useEffect(() => {
-
-
-        const loadDates = async () => {
-            const savedMeals = await AsyncStorage.getItem(`daily_meals_${user.id}`);
-            const lastDate = await AsyncStorage.getItem(`last_log_date${user.id}`)
-
-            const today = new Date().toDateString();
-
-            if (savedMeals) {
-                const parsed = JSON.parse(savedMeals);
-
-                if (lastDate && lastDate !== today) {
-                    await resetDay(parsed);
-                } else {
-                    setMeals(parsed)
-                }
-            }
-            await AsyncStorage.setItem(`last_log_date${user.id}`, today);
-
-        }
-
-
-        loadDates().catch(err => console.log("Init error:", err));
-    }, []); // This runs "Once" when the app starts
-
+    const {
+        meals, totals, plan, isModalVisible, setModalVisible, handleSaveMeal, resetDay
+    } = useDashboardData(user);
 
     //carousel slides
     const slides = [
@@ -132,7 +38,7 @@ export default function DashboardScreen({ navigation }) {
             id: 'cal',
             component:
                 <NutrientCircle
-                    consumed={dailyConsumedTotal}
+                    consumed={totals.consumed}
                     limit={plan.calories}
                 />
         },
@@ -141,9 +47,9 @@ export default function DashboardScreen({ navigation }) {
             component:
                 <MacroCircles
                     plan={plan}
-                    consumedP={dailyP}
-                    consumedC={dailyC}
-                    consumedF={dailyF}
+                    consumedP={totals.p}
+                    consumedC={totals.c}
+                    consumedF={totals.f}
                 />
         }
     ]

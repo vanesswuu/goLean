@@ -14,6 +14,7 @@ export default function LogMealModal({ visible, onClose, onSave }) {
     //temporary holder: keeps track of the items in a specific meal
     const [itemsInMeal, setItemsInMeal] = useState([]);
 
+    //to add food in the temporary summary as user logs food intake
     const handleAddFood = () => {
         if (!grams || isNaN(grams)) return Alert.alert('wait. please enter the grams');
 
@@ -35,7 +36,7 @@ export default function LogMealModal({ visible, onClose, onSave }) {
         setGrams('');
     };
 
-
+    //logging the entire meal
     const handleLogFinalMeal = () => {
 
         if (itemsInMeal.length === 0) {
@@ -69,6 +70,7 @@ export default function LogMealModal({ visible, onClose, onSave }) {
 
     return (
         <Modal visible={visible} animationType="slide" transparent={true}>
+          
             <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={onClose}>
                 <TouchableOpacity style={styles.modalContainer} activeOpacity={1}>
                     <Text style={styles.title}>What's for {mealType}?</Text>
@@ -130,6 +132,7 @@ export default function LogMealModal({ visible, onClose, onSave }) {
 
                 </TouchableOpacity>
             </TouchableOpacity>
+
         </Modal>
     );
 
