@@ -22,9 +22,7 @@ import SummaryScreen from '../screens/SummaryScreen';
 import EmpathyResponseScreen from '../screens/EmpathyResponseScreen';
 import DashboardScreen from '../screens/DashboardScreen';
 
-
-//more options menu imports
-
+import ProfileScreen from '../screens/ProfileScreen';
 
 //imports for plus button modal
 import RunTrackerScreen from '../screens/RunTrackerScreen';
@@ -57,6 +55,7 @@ function AppNavigator() {
                             <Stack.Screen name="RunTracker" component={RunTrackerScreen}
                                 options={{ headerShown: true, title: 'Run Tracker' }}
                             />
+                            <Stack.Screen name="Profile" component={ProfileScreen} />
                         </>
 
                     ) :

@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+import { useNavigation } from '@react-navigation/native';
+
 export default function DashboardHeader() {
+
+    const navigation = useNavigation();
 
     const [menuVisible, setMenuVisible] = useState(false);
 
@@ -10,7 +14,7 @@ export default function DashboardHeader() {
 
         <View style={styles.header}>
 
-            <TouchableOpacity style={styles.profileCircle}>
+            <TouchableOpacity style={styles.profileCircle} onPress={() => navigation.navigate('Profile')}>
 
                 <Ionicons name='person' size={24} color='#57606f' />
 
