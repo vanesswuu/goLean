@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOpacity: 0.08,
         shadowRadius: 10,
+        margin: 2,
         shadowOffset: { width: 0, height: 4 },
     },
     expandedCard: {

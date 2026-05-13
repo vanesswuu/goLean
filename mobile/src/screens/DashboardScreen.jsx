@@ -28,11 +28,18 @@ export default function DashboardScreen({ navigation }) {
 
     const { user } = useAuth();
 
+    const [activeIndex, setActiveIndex] = useState(0);
+
     const {
         meals, totals, plan, isModalVisible, setModalVisible, handleSaveMeal, resetDay
     } = useDashboardData(user);
 
     //carousel slides
+    const handleScroll = (event) => {
+        const slideSize = event.nativeEvent.layoutMeasurement.width;
+        const index = event.nativeEvent.contentOffset.x / slideSize;
+        setActiveIndex(Math.round(index));
+    };
     const slides = [
         {
             id: 'cal',
@@ -70,6 +77,7 @@ export default function DashboardScreen({ navigation }) {
                         pagingEnabled
                         showsHorizontalScrollIndicator={false}
                         keyExtractor={(item) => item.id}
+                        onMomentumScrollEnd={handleScroll}
                         renderItem={({ item }) => (
                             <View style={{ width }}>
                                 <DashboardCard>{item.component}</DashboardCard>
@@ -77,6 +85,20 @@ export default function DashboardScreen({ navigation }) {
                         )}
                         style={{ maxHeight: 420 }}
                     />
+
+                    {/* Pagination Dots */}
+
+                    <View style={styles.pagination}>
+                        {slides.map((_, index) => (
+                            <View
+                                key={index}
+                                style={[
+                                    styles.dot,
+                                    activeIndex === index ? styles.activeDot : styles.inactiveDot
+                                ]}
+                            />
+                        ))}
+                    </View>
 
                     {/* log meal btn*/}
                     <TouchableOpacity style={styles.logButton}
@@ -129,6 +151,28 @@ const styles = StyleSheet.create({
     logButton: { backgroundColor: '#2ed573', flexDirection: 'row', padding: 20, marginHorizontal: 30, borderRadius: 20, justifyContent: 'center', alignItems: 'center', marginTop: 15, elevation: 5 },
     logButtonText: { color: '#fff', fontSize: 18, fontWeight: 'bold', marginLeft: 10 },
     historyTitle: { fontSize: 20, fontWeight: '900', color: '#2f3542', marginHorizontal: 30, marginTop: 30, marginBottom: 15 },
+    pagination: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: -10, // Pulls them closer to the card
+        marginBottom: 10
+    },
+    dot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        marginHorizontal: 5,
+    },
+    activeDot: {
+        backgroundColor: 'green',
+        width: 20, // This creates the "pill" shape for the active slide
+    },
+    inactiveDot: {
+        backgroundColor: '#ced4da',
+    },
+
+
 });
 
 
