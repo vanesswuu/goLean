@@ -122,3 +122,45 @@ exports.getMe = async (req, res, next) => {
     }
 
 }
+
+//@desc Update user profile
+//@route PUT /api/auth/profile
+//@access Private
+
+exports.updateUserProfile = async (req, res, next) => {
+
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            res.status(404);
+            return next(new Error('User not found'));
+        }
+
+        user.age = req.body.age || user.age;
+        user.weight = req.body.weight || user.weight;
+        user.height = req.body.height || user.height;
+        user.gender = req.body.gender || user.gender;
+        user.activityLevel = req.body.activityLevel || user.activityLevel;
+        user.goal = req.body.goal || user.goal;
+
+        const updatedUser = await user.save();
+
+        res.json({
+            id: updatedUser._id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            age: updatedUser.age,
+            weight: updatedUser.weight,
+            height: updatedUser.height,
+            gender: updatedUser.gender,
+            activityLevel: updatedUser.activityLevel,
+            goal: updatedUser.goal,
+            token: generateToken(updatedUser._id),
+        });
+
+    } catch (error) {
+        next(error);
+    }
+
+}

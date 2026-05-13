@@ -9,9 +9,11 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 
+import { updateProfileAPI } from '../services/userService';
+
 export default function ProfileScreen({ navigation }) {
 
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
 
     // current user data initialized
     const [age, setAge] = useState(user?.age?.toString() || '');
@@ -20,9 +22,25 @@ export default function ProfileScreen({ navigation }) {
     const [gender, setGender] = useState(user?.gender || 'male');
     const [goal, setGoal] = useState(user?.goal || 'maintenance');
 
-    const handleSave = () => {
-        //this is where api call/save will be handled next
-        Alert.alert("Phase 2 Complete!", "UI looks good. Ready for Phase 3?");
+    const handleSave = async () => {
+        try {
+            const profileData = {
+                age: parseInt(age) || user.age,
+                weight: parseFloat(weight) || user.weight,
+                height: parseFloat(height) || user.height,
+                gender,
+                goal
+            };
+            const updatedData = await updateProfileAPI(profileData, user.token);
+            await updateUser(updatedData);
+
+            navigation.goBack();
+        } catch (error) {
+            const serverMessage = error.response?.data?.message || error.message;
+            console.log("SERVER ERROR:", serverMessage);
+            Alert.alert('Save Failed', serverMessage);
+        }
+
     }
 
     return (
