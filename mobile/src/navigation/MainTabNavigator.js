@@ -88,6 +88,7 @@ export default function MainTabNavigator() {
                     options={{
                         tabBarItemStyle: { display: 'none' },
                         headerShown: true,
+                        headerBackTitle: 'Back',
                         title: 'History'
                     }}
                 />

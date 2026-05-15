@@ -55,15 +55,14 @@ function AppNavigator() {
                         <>
                             <Stack.Screen name="Main" component={MainTabNavigator} />
                             <Stack.Screen name="RunTracker" component={RunTrackerScreen}
-                                options={{ headerShown: true, title: 'Run Tracker' }}
+                                options={{ headerShown: true, title: 'Run Tracker', headerBackTitle: 'Back' }}
                             />
                             <Stack.Screen name="Profile" component={ProfileScreen} />
                             <Stack.Screen name='Transformation' component={TransformationScreen}
                                 options={{
                                     headerShown: true,
                                     title: 'Transformation vault',
-                                    headerBackTitle: 'Back'
-
+                                    headerBackTitle: 'Back',
                                 }}
                             />
                         </>
