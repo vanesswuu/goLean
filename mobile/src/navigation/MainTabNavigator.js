@@ -172,7 +172,7 @@ export default function MainTabNavigator() {
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 
                             <View style={styles.squareRow}>
-                               
+
                                 <TouchableOpacity
                                     style={styles.squareButton}
                                     onPress={() => {
@@ -188,12 +188,13 @@ export default function MainTabNavigator() {
                                     style={styles.squareButton}
                                     onPress={() => {
                                         setPlusVisible(false);
+                                        navigation.navigate('Transformation');
                                     }}
                                 >
-                                    <Ionicons name="restaurant-outline" size={40} color="#2f3542" />
-                                    <Text style={styles.squareButtonText}>Log Meal</Text>
+                                    <Ionicons name="camera-outline" size={40} color="#2f3542" />
+                                    <Text style={styles.squareButtonText}>Progress Photos</Text>
                                 </TouchableOpacity>
-                                
+
                             </View>
 
                         </View>

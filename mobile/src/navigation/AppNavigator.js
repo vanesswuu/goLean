@@ -26,6 +26,8 @@ import ProfileScreen from '../screens/ProfileScreen';
 
 //imports for plus button modal
 import RunTrackerScreen from '../screens/RunTrackerScreen';
+import TransformationScreen from '../screens/TransformationScreen';
+
 
 import { useAuth } from '../context/AuthContext';
 
@@ -56,6 +58,14 @@ function AppNavigator() {
                                 options={{ headerShown: true, title: 'Run Tracker' }}
                             />
                             <Stack.Screen name="Profile" component={ProfileScreen} />
+                            <Stack.Screen name='Transformation' component={TransformationScreen}
+                                options={{
+                                    headerShown: true,
+                                    title: 'Transformation vault',
+                                    headerBackTitle: 'Back'
+
+                                }}
+                            />
                         </>
 
                     ) :
