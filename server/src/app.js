@@ -3,11 +3,14 @@ const cors = require('cors');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const { errorHandler } = require('./middlewares/errorHandler');
+const path = require('path');
+
+
 //import routes after dependencies imports
 const authRoutes = require('./routes/authRoutes');
 const logRoutes = require('./routes/logRoutes');
 const runLogRoutes = require('./routes/runLogRoutes');
-
+const photoRoutes = require('./routes/photoRoutes');
 
 const app = express();
 
@@ -20,8 +23,11 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/logs', logRoutes);
 app.use('/api/runs', runLogRoutes);
-
+app.use('/api/photos', photoRoutes);
 
 app.use(errorHandler);
+app.use('/uploads',
+    express.static(path.join(__dirname, '../uploads')));
+//makes the uploads folder publicly
 
 module.exports = app;
