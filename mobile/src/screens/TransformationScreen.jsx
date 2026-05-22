@@ -4,7 +4,14 @@ import {
     Alert, Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
 import * as ImagePicker from 'expo-image-picker';
+
+//service imports
+import { useAuth } from '../context/AuthContext';
+import { uploadPhotoAPI, getPhotosAPI } from '../services/photoService';
+
+
 
 const { width } = Dimensions.get('window');
 const COLUMN_WIDTH = width / 2 - 25;
@@ -12,6 +19,28 @@ const COLUMN_WIDTH = width / 2 - 25;
 export default function TransformationScreen() {
 
     const [photos, setPhotos] = useState([]);
+    const { user } = useAuth();
+
+
+    //this fetches the photos when the screen loads
+    useEffect(() => {
+
+        if (user?.token) {
+            loadPhotos();
+        }
+
+    }, [user]);
+
+    const loadPhotos = async () => {
+
+        try {
+            const dbPhotos = await getPhotosAPI(user.token);
+            setPhotos(dbPhotos);
+        } catch (error) {
+            console.log('error loading photos: ', error)
+        }
+
+    };
 
     const handleAddPhoto = async () => {
         //1. ask for permission
@@ -31,13 +60,23 @@ export default function TransformationScreen() {
         });
 
         if (!result.canceled) {
-            const newPhoto = {
-                id: Date.now().toString(),
-                uri: result.assets[0].uri,
-                date: new Date().toLocaleString(),
+            //we send the payload to the server/database here
+            const payload = {
+                imageUri: result.assets[0].uri,
+                weight: user.weight
+            }
+
+            try {
+
+                const savedPhoto = await uploadPhotoAPI(payload, user.token);
+
+                setPhotos([savedPhoto, ...photos]);
+
+            } catch (error) {
+                console.error('error saving photo:', error);
+                Alert.alert('Upload Failed', 'Could not save photo');
             };
 
-            setPhotos([newPhoto, ...photos]);
         }
     };
 
@@ -60,7 +99,8 @@ export default function TransformationScreen() {
                 renderItem={({ item }) => (
                     <View style={styles.photoCard}>
 
-                        <Image source={{ uri: item.uri }} style={styles.image} />
+                        <Image source={{ uri: `http://192.168.1.21:5000${item.imageUrl}` }}
+                            style={styles.image} />
                         <View style={styles.dateBadge}>
                             <Text style={styles.dateText}>{item.date}</Text>
                         </View>
