@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View, Text, StyleSheet, TouchableOpacity, FlatList, Image,
     Alert, Dimensions
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
 import * as ImagePicker from 'expo-image-picker';
-
-//service imports
 import { useAuth } from '../context/AuthContext';
 import { uploadPhotoAPI, getPhotosAPI } from '../services/photoService';
-
+import ImageComparisonSlider from '../components/transformation/ImageComparisonSlider';
+const SERVER_BASE = 'http://192.168.254.122:5000';
 
 
 const { width } = Dimensions.get('window');
@@ -20,7 +18,7 @@ export default function TransformationScreen() {
 
     const [photos, setPhotos] = useState([]);
     const { user } = useAuth();
-
+    const [compareSet, setCompareSet] = useState([]);
 
     //this fetches the photos when the screen loads
     useEffect(() => {
@@ -32,6 +30,7 @@ export default function TransformationScreen() {
     }, [user]);
 
     const loadPhotos = async () => {
+        if (!user?.token) return;
 
         try {
             const dbPhotos = await getPhotosAPI(user.token);
@@ -71,6 +70,7 @@ export default function TransformationScreen() {
                 const savedPhoto = await uploadPhotoAPI(payload, user.token);
 
                 setPhotos([savedPhoto, ...photos]);
+                setCompareSet([]);
 
             } catch (error) {
                 console.error('error saving photo:', error);
@@ -79,6 +79,17 @@ export default function TransformationScreen() {
 
         }
     };
+
+    const toggleCompare = (photo) => {
+
+        const alreadySelected = compareSet.some((p) => p._id === photo._id);
+        if (alreadySelected) {
+            setCompareSet(compareSet.filter((p) => p._id !== photo._id));
+        } else if (compareSet.length < 2) {
+            setCompareSet([...compareSet, photo]);
+        }
+        // ignore taps when two are already selected
+    }
 
     return (
 
@@ -89,7 +100,11 @@ export default function TransformationScreen() {
                     Track your physical evolution
                 </Text>
             </View>
-
+            {/* float action button */}
+            <TouchableOpacity style={styles.fab} onPress={handleAddPhoto}>
+                <Ionicons name='camera' size={30} color='#fff' />
+                <Text style={styles.buttonText}>Add Photo</Text>
+            </TouchableOpacity>
             {/* this loops through and renders the photos state */}
             <FlatList
                 data={photos}
@@ -97,15 +112,20 @@ export default function TransformationScreen() {
                 numColumns={2}
                 contentContainer={styles.grid}
                 renderItem={({ item }) => (
-                    <View style={styles.photoCard}>
+                    <TouchableOpacity style={styles.photoCard} onPress={() => toggleCompare(item)}>
 
-                        <Image source={{ uri: `http://192.168.1.21:5000${item.imageUrl}` }}
-                            style={styles.image} />
+                        <Image source={{ uri: `${SERVER_BASE}${item.imageUrl}` }}
+                            style={[styles.image,
+                            compareSet.find((p) => p._id === item._id) && {
+                                borderColor: '#0a84ff',
+                                borderWidth: 2,
+                            },
+                            ]} />
                         <View style={styles.dateBadge}>
                             <Text style={styles.dateText}>{item.date}</Text>
                         </View>
 
-                    </View>
+                    </TouchableOpacity>
                 )}
                 ListEmptyComponent={
                     <View style={styles.emptyState}>
@@ -116,61 +136,100 @@ export default function TransformationScreen() {
                 }
             />
 
-            {/* float action button */}
-            <TouchableOpacity style={styles.fab} onPress={handleAddPhoto}>
-                <Ionicons name='camera' size={30} color='#fff' />
-            </TouchableOpacity>
+
+
+            {/* added: comparison slider – only when exactly two photos are selected */}
+            {compareSet.length === 2 && (
+                <ImageComparisonSlider
+                    beforeUri={`${SERVER_BASE}${compareSet[0].imageUrl}`}
+                    afterUri={`${SERVER_BASE}${compareSet[1].imageUrl}`} />
+            )}
 
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#f8f9fa' },
-    headerInfo: { padding: 20, backgroundColor: '#fff' },
-    subtitle: { fontSize: 16, color: '#a4b0be', fontWeight: '500' },
-    grid: { padding: 15 },
-    photoCard: {
-        width: COLUMN_WIDTH,
-        height: COLUMN_WIDTH * 1.2,
-        backgroundColor: '#fff',
-        borderRadius: 20,
-        margin: 5,
-        overflow: 'hidden',
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        borderColor: 'black',
-        borderWidth: 2,
+    container: {
+        flex: 1,
+        backgroundColor: '#fafafa',
+        paddingHorizontal: 15,
+        paddingTop: 20,
     },
-    image: { width: '100%', height: '100%' },
-    dateBadge: {
-        position: 'absolute',
-        bottom: 10,
-        left: 10,
-        backgroundColor: 'rgba(47, 53, 66, 0.8)',
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 10,
+    headerInfo: {
+        marginBottom: 15,
     },
-    dateText: { color: '#fff', fontSize: 10, fontWeight: 'bold' },
-    emptyState: { alignItems: 'center', marginTop: 100 },
-    emptyText: { fontSize: 18, fontWeight: 'bold', color: '#2f3542', marginTop: 20 },
-    emptySubtext: { color: '#a4b0be', marginTop: 5 },
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#222',
+    },
+    subtitle: {
+        fontSize: 16,
+        color: '#555',
+        marginTop: 4,
+    },
+    // ── FAB style ──
     fab: {
         position: 'absolute',
-        right: 25,
-        bottom: 25,
-        backgroundColor: '#2ed573',
-        width: 65,
-        height: 65,
-        borderRadius: 35,
-        justifyContent: 'center',
+        right: 20,
+        bottom: 20,
+        backgroundColor: '#0a84ff',
+        width: 60,
+        height: 60,
+        borderRadius: 30,
         alignItems: 'center',
-        elevation: 8,
-        shadowColor: '#2ed573',
-        shadowOpacity: 0.4,
-        shadowRadius: 10,
-    }
+        justifyContent: 'center',
+        elevation: 6,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+        zIndex: 10,
+    },
+    // optional regular button you might still use elsewhere
+    button: {
+        flexDirection: 'row',
+        backgroundColor: '#0a84ff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        borderRadius: 8,
+        marginBottom: 15,
+    },
+    buttonText: {
+        color: 'white',
+        marginLeft: 8,
+        fontWeight: '600',
+        fontSize: 16,
+    },
+    grid: {
+        paddingBottom: 30,
+    },
+    photoCard: {
+        width: COLUMN_WIDTH,
+        margin: 5,
+        borderRadius: 8,
+        overflow: 'hidden',
+        backgroundColor: '#fff',
+        elevation: 2,
+    },
+    image: {
+        width: '100%',
+        height: 150,
+        resizeMode: 'cover',
+    },
+    dateBadge: {
+        position: 'absolute',
+        bottom: 4,
+        right: 4,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        paddingHorizontal: 6,
+        paddingVertical: 2,
+        borderRadius: 4,
+    },
+    dateText: {
+        color: '#fff',
+        fontSize: 12,
+    },
 });

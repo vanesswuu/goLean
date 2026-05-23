@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http:192.168.1.21:5000/api/photos';
+const API_URL = 'http://192.168.254.122:5000/api/photos';
 
 
 export const uploadPhotoAPI = async (payload, token) => {
