@@ -1,8 +1,7 @@
 import axios from 'axios';
+import API_BASE from '../config';
 
-
-const API_URL = 'http://192.168.254.122:5000/api/auth';
-
+const API_URL = `${API_BASE}/api/auth`;
 //service to handle all auth api calls
 
 //for signup

@@ -1,7 +1,7 @@
 import axios from 'axios';
+import API_BASE from '../config';
 
-const API_URL = 'http://192.168.254.122:5000/api/photos';
-
+const API_URL = `${API_BASE}/api/photos`;
 
 export const uploadPhotoAPI = async (payload, token) => {
     //this unpacks the payload
