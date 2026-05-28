@@ -34,3 +34,12 @@ export const login = async (credentials) => {
 
     }
 }
+
+export const googleLogin = async (idToken, onboardingData = null) => {
+    try {
+        const res = await axios.post(`${API_URL}/google`, { idToken, onboardingData })
+        return res.data;
+    } catch (error) {
+        throw error.response?.data?.message || 'Google sign-in failed'
+    }
+};

@@ -1,5 +1,75 @@
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 const User = require('../models/User');
 const generateToken = require('../utils/generateToken');
+
+
+// @desc Authenticate with google
+// @route POST /api/auth/google
+// @access public
+exports.googleLogin = async (req, res, next) => {
+
+    const { idToken, onboardingData } = req.body;
+
+    try {
+        // token verification sent from the mobile app
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID
+        })
+
+        const payload = ticket.getPayload();
+        const { sub: googleId, email, name, picture: avatarUrl } = payload;
+
+        let user = await User.findOne({
+            $or: [{ googleId }, {
+                email
+            }]
+        })
+
+        if (!user) {
+            user = await User.create({
+                name,
+                email,
+                googleId,
+                avatarUrl,
+                goal: onboardingData?.goal || 'general_health',
+                barrier: onboardingData?.barrier || 'time',
+                age: onboardingData?.age ? Number(onboardingData.age) : 25,
+                gender: onboardingData?.gender || 'other',
+                weight: onboardingData?.weight ? Number(onboardingData.weight) : 70,
+                height: onboardingData?.height ? Number(onboardingData.height) : 170,
+                activityLevel: onboardingData?.activityLevel || 'sedentary'
+            });
+        } else if (!user.googleId) {
+            user.googleId = googleId;
+            if (avatarUrl) user.avatarUrl = avatarUrl;
+            await user.save();
+        }
+
+        res.json({
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            age: user.age,
+            gender: user.gender,
+            weight: user.weight,
+            height: user.height,
+            activityLevel: user.activityLevel,
+            goal: user.goal,
+            avatarUrl: user.avatarUrl,
+            token: generateToken(user._id)
+        });
+
+    } catch (error) {
+        res.status(401);
+        next(new Error('Google verification failed: ' + error.message));
+    }
+
+}
+
+
 
 
 //@desc register a new user

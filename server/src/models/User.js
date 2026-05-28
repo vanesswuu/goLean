@@ -13,9 +13,16 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: function () { return !this.googleId; } //  only required if googleId is not present
     },
-
+    googleId: { //  store Google's unique user identifier
+        type: String,
+        unique: true,
+        sparse: true
+    },
+    avatarUrl: { // field to save their Google profile photo
+        type: String
+    },
     goal: {
         type: String,
         required: true,

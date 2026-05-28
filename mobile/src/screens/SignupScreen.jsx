@@ -4,7 +4,8 @@ import { signup } from '../services/authService';
 import { useOnboarding } from '../context/OnboardingContext';
 
 import { useAuth } from '../context/AuthContext';
-
+// import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+// import { googleLogin as googleLoginAPI } from '../services/authService';
 
 
 const SignupScreen = ({ navigation }) => {
@@ -17,6 +18,37 @@ const SignupScreen = ({ navigation }) => {
     // Notice we removed setName hook because Name is already in the cart!
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    // const handleGoogleSignup = async () => {
+    //     try {
+    //         await GoogleSignin.hasPlayServices();
+    //         const response = await GoogleSignin.signIn();
+    //         const idToken = response.idToken || response.data?.idToken;
+    //         if (idToken) {
+    //             // Pass the ID token along with onboarding data collected from screens
+    //             const userData = {
+    //                 name: onboarding.name,
+    //                 goal: onboarding.goal,
+    //                 barrier: onboarding.barrier,
+    //                 age: Number(onboarding.age),
+    //                 weight: Number(onboarding.weight),
+    //                 height: Number(onboarding.height),
+    //                 activityLevel: onboarding.activityLevel,
+    //                 gender: onboarding.gender
+    //             };
+    //             const result = await googleLoginAPI(idToken, userData);
+    //             Alert.alert('Success!', `Welcome to goLean, ${result.name}`);
+    //             clearData(); // Clear onboarding context
+    //             await login(result);
+    //         }
+    //     } catch (error) {
+    //         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+    //             // User cancelled
+    //         } else {
+    //             Alert.alert('Google Signup Error', error.toString());
+    //         }
+    //     }
+    // };
 
     const handleSignup = async () => {
         try {
@@ -71,6 +103,13 @@ const SignupScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={handleSignup}>
                 <Text style={styles.buttonText}>Create Account</Text>
             </TouchableOpacity>
+
+            {/* <TouchableOpacity
+                style={[styles.button, { backgroundColor: '#db4437', marginTop: 10 }]}
+                onPress={handleGoogleSignup}
+            >
+                <Text style={styles.buttonText}>Sign Up with Google</Text>
+            </TouchableOpacity> */}
         </ScrollView>
     );
 }

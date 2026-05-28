@@ -9,6 +9,8 @@ import { login as loginAPI } from '../services/authService';
 
 //auth context to login and save user data to async storage
 import { useAuth } from '../context/AuthContext';
+// import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+// import { googleLogin as googleLoginAPI } from '../services/authService';
 
 
 
@@ -26,6 +28,25 @@ const LoginScreen = ({ navigation }) => {
 
     }, [])
 
+    // const handleGoogleLogin = async () => {
+    //     try {
+    //         await GoogleSignin.hasPlayServices();
+    //         const response = await GoogleSignin.signIn();
+    //         const idToken = response.idToken || response.data?.idToken
+    //
+    //         if (idToken) {
+    //             const result = await googleLoginAPI(idToken);
+    //             Alert.alert('Success!', `Hi, ${result.name}!`)
+    //             await login(result);
+    //         }
+    //     } catch (error) {
+    //         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+    //             // User cancelled
+    //         } else {
+    //             Alert.alert('Google Auth Error', error.toString());
+    //         }
+    //     }
+    // }
 
     const handleLogin = async () => {
         try {
@@ -68,7 +89,12 @@ const LoginScreen = ({ navigation }) => {
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>LOGIN</Text>
             </TouchableOpacity>
-
+            {/* <TouchableOpacity
+                style={[styles.button, { backgroundColor: '#db4437', marginTop: 10 }]}
+                onPress={handleGoogleLogin}
+            >
+                <Text style={styles.buttonText}>SIGN IN WITH GOOGLE</Text>
+            </TouchableOpacity> */}
         </View>
     );
 

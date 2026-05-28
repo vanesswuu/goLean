@@ -30,10 +30,16 @@ import TransformationScreen from '../screens/TransformationScreen';
 
 
 import { useAuth } from '../context/AuthContext';
+// import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 
 
 const Stack = createStackNavigator();
+
+// GoogleSignin.configure({
+//     webClientId: '444145239546-3eear1pdmjig05u67v6vfhthr7k931dd.apps.googleusercontent.com',
+//     offlineAccess: true,
+// });
 
 function AppNavigator() {
 
