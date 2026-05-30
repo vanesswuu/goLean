@@ -4,6 +4,14 @@
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+    requestNotificationPermissions,
+    scheduleDailyReminder,
+    scheduleWeeklyReminder,
+    cancelAllReminders,
+    scheduleTestNotification
+} from '../utils/notificationService';
+
 
 const AuthContext = createContext();
 
@@ -11,6 +19,17 @@ export const AuthProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
     const [isLoading, setisLoading] = useState(true);
+
+    const setupNotifications = async () => {
+        const hasPermission = await requestNotificationPermissions();
+        if (hasPermission) {
+            await scheduleDailyReminder();
+            await scheduleWeeklyReminder();
+        }
+    }
+
+
+
 
     useEffect(() => {
 
@@ -22,6 +41,8 @@ export const AuthProvider = ({ children }) => {
                 if (storedUser) {
                     // We turn the text back into a real JS object!
                     setUser(JSON.parse(storedUser));
+                    await setupNotifications();
+                    await scheduleTestNotification();
                 }
             } catch (error) {
                 console.log('failed to load user');
@@ -37,12 +58,13 @@ export const AuthProvider = ({ children }) => {
 
         setUser(userData);
         await AsyncStorage.setItem('user', JSON.stringify(userData));
-
+        await setupNotifications();
     };
 
     const logout = async () => {
         setUser(null);
         await AsyncStorage.removeItem('user');
+        await cancelAllReminders();
     }
 
     const updateUser = async (updatedUserData) => {

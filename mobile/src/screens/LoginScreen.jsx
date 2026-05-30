@@ -33,7 +33,7 @@ const LoginScreen = ({ navigation }) => {
     //         await GoogleSignin.hasPlayServices();
     //         const response = await GoogleSignin.signIn();
     //         const idToken = response.idToken || response.data?.idToken
-    //
+    // 
     //         if (idToken) {
     //             const result = await googleLoginAPI(idToken);
     //             Alert.alert('Success!', `Hi, ${result.name}!`)

@@ -173,8 +173,12 @@ export default function TransformationScreen() {
                         <Ionicons name="camera-outline" size={80} color="#dcdde1" />
                         <Text style={styles.emptyText}>No progress photos yet.</Text>
                         <Text style={styles.emptySubtext}>Your first photo is the hardest part!</Text>
+                        <TouchableOpacity style={styles.emptyCtaBtn} onPress={handleAddPhoto}>
+                            <Text style={styles.emptyCtaText}>Take First Photo</Text>
+                        </TouchableOpacity>
                     </View>
                 }
+
             />
 
             {/* add photo button */}
@@ -289,18 +293,40 @@ const styles = StyleSheet.create({
     },
     emptyState: {
         alignItems: 'center',
-        marginTop: 80,
+        justifyContent: 'center',
+        paddingVertical: 60,
+        paddingHorizontal: 20,
     },
     emptyText: {
-        fontSize: 17,
+        fontSize: 18,
         fontWeight: 'bold',
-        color: '#444',
+        color: '#222',
         marginTop: 16,
     },
     emptySubtext: {
-        color: '#aaa',
-        marginTop: 6,
-        fontSize: 13,
+        fontSize: 14,
+        color: '#888',
+        marginTop: 8,
+        textAlign: 'center',
+        lineHeight: 20,
+        paddingHorizontal: 20,
+    },
+    emptyCtaBtn: {
+        backgroundColor: '#0a84ff', // Matches the Vault theme color
+        paddingVertical: 12,
+        paddingHorizontal: 25,
+        borderRadius: 25,
+        marginTop: 24,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.41,
+    },
+    emptyCtaText: {
+        color: '#fff',
+        fontSize: 15,
+        fontWeight: 'bold',
     },
     fab: {
         position: 'absolute',
@@ -319,4 +345,5 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         zIndex: 10,
     },
+
 });

@@ -72,119 +72,102 @@ const MacroPill = ({ label, value, color }) => (
 );
 
 
+// Minimal premium style for MealLogCard
 const styles = StyleSheet.create({
-    container: {
-        marginBottom: 15,
-    },
     logCard: {
-        backgroundColor: '#fff',
-        padding: 20,
-        borderRadius: 20,
+        backgroundColor: 'rgba(255,255,255,0.85)',
+        padding: 16,
+        borderRadius: 12,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        elevation: 4,
-        shadowColor: '#000',
-        shadowOpacity: 0.08,
-        shadowRadius: 10,
-        margin: 2,
-        shadowOffset: { width: 0, height: 4 },
-    },
-    expandedCard: {
-        borderBottomLeftRadius: 0,
-        borderBottomRightRadius: 0,
+        // subtle elevation for depth on Android
         elevation: 2,
+        shadowColor: '#000',
+        shadowOpacity: 0.05,
+        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 2 },
     },
     dateText: {
-        fontSize: 17,
-        fontWeight: 'bold',
-        color: '#2f3542'
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#222',
     },
     mealCount: {
-        fontSize: 12,
-        color: '#a4b0be',
-        marginTop: 4,
-        fontWeight: '600'
+        fontSize: 13,
+        color: '#666',
+        marginTop: 2,
     },
     rightSection: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12
+        gap: 8,
     },
     calText: {
-        fontSize: 24,
-        fontWeight: '900',
-        color: '#2ed573'
-    },
-    calUnit: {
-        fontSize: 12,
-        color: '#a4b0be',
-        fontWeight: '600'
+        fontSize: 20,
+        fontWeight: '700',
+        color: '#2ed573',
     },
     dropdownContainer: {
-        backgroundColor: '#fff',
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
-        paddingHorizontal: 15,
-        paddingBottom: 15,
-        paddingTop: 5,
+        backgroundColor: 'rgba(255,255,255,0.9)',
+        borderRadius: 12,
+        padding: 12,
+        marginTop: 8,
         borderTopWidth: 1,
-        borderTopColor: '#f1f2f6',
-        elevation: 2,
+        borderTopColor: '#e0e0e0',
     },
     mealDetailRow: {
-        backgroundColor: '#f8f9fa',
-        borderRadius: 15,
-        padding: 15,
-        marginTop: 10,
+        backgroundColor: '#fafafa',
+        borderRadius: 10,
+        padding: 12,
+        marginTop: 8,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    foodInfo: {
-        flex: 1,
-    },
+    foodInfo: { flex: 1 },
     mealType: {
         color: '#2ed573',
-        fontSize: 14,
-        fontWeight: 'bold',
+        fontSize: 13,
+        fontWeight: '600',
         textTransform: 'uppercase',
-        marginBottom: 4
+        marginBottom: 4,
     },
     mealFood: {
-        fontSize: 13,
-        color: '#57606f',
-        lineHeight: 18
+        fontSize: 12,
+        color: '#555',
+        lineHeight: 16,
     },
     mealCals: {
-        color: '#2f3542',
+        color: '#333',
         fontSize: 12,
-        fontWeight: '700',
-        marginTop: 4
+        fontWeight: '600',
+        marginTop: 2,
     },
     macrosSection: {
-        gap: 6,
         alignItems: 'flex-end',
+        gap: 4,
     },
     macroPill: {
         backgroundColor: '#fff',
-        paddingVertical: 4,
-        paddingHorizontal: 8,
-        borderRadius: 8,
+        paddingVertical: 3,
+        paddingHorizontal: 6,
+        borderRadius: 6,
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        width: 60,
         borderWidth: 1,
-        borderColor: '#f1f2f6'
+        borderColor: '#e0e0e0',
     },
     macroLabel: {
-        fontSize: 10,
-        fontWeight: '900',
+        fontSize: 9,
+        fontWeight: '700',
+        marginRight: 2,
+        color: '#333',
     },
     macroValue: {
-        fontSize: 11,
-        fontWeight: 'bold',
-        color: '#2f3542',
+        fontSize: 10,
+        fontWeight: '600',
+        color: '#333',
     },
 });
+

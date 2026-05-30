@@ -17,11 +17,12 @@ import { useAuth } from '../context/AuthContext'
 import MealLogCard from '../components/history/MealLogCard';
 import RunCard from '../components/history/RunCard';
 import HistoryToggle from '../components/history/HistoryToggle';
-
+import { useNavigation } from '@react-navigation/native';
 
 export default function HistoryScreen() {
 
     const { user } = useAuth();
+    const navigation = useNavigation();
     const [activeTab, setActiveTab] = useState('meals');
 
     const [runs, setRuns] = useState([]);
@@ -105,8 +106,31 @@ export default function HistoryScreen() {
                 }}
 
                 ListEmptyComponent={
-                    <Text style={styles.emptyText}>No history yet. Finish a day to see it here!</Text>
+                    <View style={styles.emptyStateContainer}>
+                        <Ionicons
+                            name={activeTab === 'meals' ? 'restaurant-outline' : 'fitness-outline'}
+                            size={70}
+                            color="#ced6e0"
+                        />
+                        <Text style={styles.emptyStateTitle}>
+                            {activeTab === 'meals' ? 'No Meals Logged Yet' : 'No Runs Recorded'}
+                        </Text>
+                        <Text style={styles.emptyStateSubtitle}>
+                            {activeTab === 'meals'
+                                ? 'Track your meals daily to see your calorie logs and TDEE progress here!'
+                                : 'Record your outdoor walks or runs to keep track of your distance and maps!'}
+                        </Text>
+                        {activeTab === 'runs' && (
+                            <TouchableOpacity
+                                style={styles.emptyStateButton}
+                                onPress={() => navigation.navigate('RunTracker')}
+                            >
+                                <Text style={styles.emptyStateButtonText}>Record Your First Run</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
                 }
+
             />
 
 
@@ -164,5 +188,42 @@ const styles = StyleSheet.create({
         color: '#a4b0be',
         fontSize: 16,
         fontWeight: 'bold'
+    },
+    emptyStateContainer: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 50,
+        paddingHorizontal: 20,
+    },
+    emptyStateTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#2f3542',
+        marginTop: 15,
+    },
+    emptyStateSubtitle: {
+        fontSize: 14,
+        color: '#747d8c',
+        textAlign: 'center',
+        marginTop: 8,
+        lineHeight: 20,
+        paddingHorizontal: 10,
+    },
+    emptyStateButton: {
+        backgroundColor: '#2ed573', // Matches goLean's theme green
+        paddingVertical: 12,
+        paddingHorizontal: 25,
+        borderRadius: 25,
+        marginTop: 20,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
+        shadowRadius: 1.41,
+    },
+    emptyStateButtonText: {
+        color: '#ffffff',
+        fontSize: 15,
+        fontWeight: 'bold',
     },
 });
