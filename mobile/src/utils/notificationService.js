@@ -45,7 +45,7 @@ export const scheduleDailyReminder = async () => {
 
     await Notifications.scheduleNotificationAsync({
         content: {
-            title: "Log Your Progress 🥗",
+            title: "Log Your Progress ",
             body: "Time to check in! Don't forget to log your daily weight and meals.",
             sound: true,
         },
@@ -58,34 +58,45 @@ export const scheduleDailyReminder = async () => {
     console.log('Daily logging reminder scheduled for 8:00 PM');
 };
 
-// 3. Schedule Weekly Progress Photo Reminder (e.g., Sundays at 10:00 AM)
 export const scheduleWeeklyReminder = async () => {
     await Notifications.scheduleNotificationAsync({
         content: {
-            title: "Vault Check-in 📸",
+            title: "Vault Check-in ",
             body: "Weekly milestone! Update your Transformation Vault with a new progress photo.",
             sound: true,
         },
         trigger: {
             type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
-            weekday: 1, // Sunday (1 corresponds to Sunday in this API)
-            hour: 10,   // 10:00 AM
+            weekday: 1,
+            hour: 10,
             minute: 0,
         },
     });
     console.log('Weekly vault reminder scheduled for Sundays at 10:00 AM');
 };
 
-// 4. Cancel all reminders (used during logout)
+
 export const cancelAllReminders = async () => {
     await Notifications.cancelAllScheduledNotificationsAsync();
     console.log('All scheduled notifications cancelled.');
 };
 
+
+export const getUnreadNotificationCount = async () => {
+    try {
+        const pending = await Notifications.getAllScheduledNotificationsAsync();
+        // If you have a custom payload flag (e.g., read:true/false) adjust here.
+        return pending.length;
+    } catch (e) {
+        console.warn('Error reading pending notifications', e);
+        return 0;
+    }
+};
+
 export const scheduleTestNotification = async () => {
     await Notifications.scheduleNotificationAsync({
         content: {
-            title: "Test Notification! 🚀",
+            title: "Test Notification! ",
             body: "This is a test local notification from goLean. It works!",
             sound: true,
         },

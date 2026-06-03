@@ -27,7 +27,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 //imports for plus button modal
 import RunTrackerScreen from '../screens/RunTrackerScreen';
 import TransformationScreen from '../screens/TransformationScreen';
-
+import NotificationsScreen from '../screens/NotificationsScreen';
 
 import { useAuth } from '../context/AuthContext';
 // import { GoogleSignin } from '@react-native-google-signin/google-signin';
@@ -69,6 +69,13 @@ function AppNavigator() {
                                     headerShown: true,
                                     title: 'Transformation vault',
                                     headerBackTitle: 'Back',
+                                }}
+                            />
+                            <Stack.Screen name='Notifications' component={NotificationsScreen}
+                                options={{
+                                    headerShown: true,
+                                    title: 'Notifications',
+                                    headerBackTitle: 'Back'
                                 }}
                             />
                         </>
