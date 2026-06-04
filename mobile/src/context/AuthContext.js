@@ -30,9 +30,6 @@ export const AuthProvider = ({ children }) => {
         }
     }
 
-
-
-
     useEffect(() => {
 
         const loadStoredUser = async () => {
