@@ -41,4 +41,20 @@ const getNotifications = async (req, res, next) => {
     }
 };
 
-module.exports = { saveNotification, getNotifications }
+
+const markAsRead = async (req, res, next) => {
+
+    try {
+
+        await Notification.updateMany(
+            { user: req.user.id, isRead: { $ne: true } },
+            { $set: { isRead: true } }
+        );
+        res.json({ message: 'Notifications marked as read' })
+    } catch (error) {
+        next(error);
+    }
+
+}
+
+module.exports = { saveNotification, getNotifications, markAsRead }

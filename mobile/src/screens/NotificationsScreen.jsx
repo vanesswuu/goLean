@@ -9,7 +9,7 @@ import {
     scheduleTestNotification
 } from '../utils/notificationService';
 import { useAuth } from '../context/AuthContext';
-import { saveNotificationAPI, getNotificationsAPI } from '../services/notificationApiService';
+import { saveNotificationAPI, getNotificationsAPI, markNotificationsAsReadAPI } from '../services/notificationApiService';
 
 export default function NotificationsScreen() {
 
@@ -40,6 +40,13 @@ export default function NotificationsScreen() {
             const granted = await requestNotificationPermissions();
             if (granted) {
                 await loadNotifications();
+                if (user?.token) {
+                    try {
+                        await markNotificationsAsReadAPI(user.token);
+                    } catch (err) {
+                        console.warn('Failed to mark notifications as read', err);
+                    }
+                }
             } else {
                 setLoading(false);
             }
@@ -83,6 +90,13 @@ export default function NotificationsScreen() {
     const onRefresh = async () => {
         setRefreshing(true);
         await loadNotifications();
+        if (user?.token) {
+            try {
+                await markNotificationsAsReadAPI(user.token);
+            } catch (err) {
+                console.warn('Failed to mark notifications as read', err);
+            }
+        }
     }
 
     const renderItem = ({ item }) => (

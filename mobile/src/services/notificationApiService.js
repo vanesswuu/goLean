@@ -18,3 +18,10 @@ export const getNotificationsAPI = async (token) => {
     });
     return res.data;
 }
+
+export const markNotificationsAsReadAPI = async (token) => {
+    const res = await axios.put(`${API_URL}/mark-read`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return res.data;
+}
