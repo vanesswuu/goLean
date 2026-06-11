@@ -126,7 +126,7 @@ export default function NotificationsScreen() {
                     style={styles.testBtn}
                     onPress={() => console.log('mark all as read coming soon')} //to be updated
                 >
-                    <Text>Mark all as read</Text>
+                    <Text>Mark all as readd</Text>
                 </TouchableOpacity>
 
             </View>
