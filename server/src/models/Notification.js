@@ -18,6 +18,14 @@ const NotificationSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    type: {
+        type: String,
+        enum: ['streak', 'run_distance', 'run_streak', 'run_speed', 'reminder', 'general'],
+        default: 'general'
+    },
+    mileStone: {
+        type: Number,
+    },
     isRead: {
         type: Boolean,
         default: false

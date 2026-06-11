@@ -12,7 +12,7 @@ const logRoutes = require('./routes/logRoutes');
 const runLogRoutes = require('./routes/runLogRoutes');
 const photoRoutes = require('./routes/photoRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
-
+const aiRoutes = require('./routes/aiRoutes');
 
 const app = express();
 
@@ -27,6 +27,8 @@ app.use('/api/logs', logRoutes);
 app.use('/api/runs', runLogRoutes);
 app.use('/api/photos', photoRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/ai', aiRoutes);
+
 
 app.use(errorHandler);
 app.use('/uploads',

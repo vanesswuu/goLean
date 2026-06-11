@@ -14,6 +14,7 @@ import MacroCircles from '../components/MacroCircles';
 import LogMealModal from '../components/LogMealModal';
 import DashboardMealCard from '../components/dashboard/DashboardMealCard';
 import DashboardEmptyState from '../components/dashboard/DashboardEmptyState';
+import DailyMotivation from '../components/dashboard/DailyMotivation';
 
 //context and logic
 import { useAuth } from '../context/AuthContext';
@@ -117,6 +118,8 @@ export default function DashboardScreen({ navigation }) {
                             <Text style={{ color: '#ff4757', fontWeight: 'bold', fontSize: 15 }}>Day Finished</Text>
                         </TouchableOpacity>
                     </View>
+
+                    <DailyMotivation />
 
                     {/* the empty state (no foog logged)*/}
 

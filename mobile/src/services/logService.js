@@ -23,3 +23,20 @@ export const getLogsAPI = async (token) => {
     });
     return res.data;
 }
+
+export const parseMealAPI = async (text, token) => {
+
+    const res = await axios.post(`${API_BASE}/api/ai/parse-meal`,
+        { text }, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+    return res.data.items;
+}
+
+export const getAIQuoteAPI = async (token) => {
+    const res = await axios.get(`${API_BASE}/api/ai/quote`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data.quote;
+};
+

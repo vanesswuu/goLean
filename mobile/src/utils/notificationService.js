@@ -93,17 +93,3 @@ export const getUnreadNotificationCount = async () => {
     }
 };
 
-export const scheduleTestNotification = async () => {
-    await Notifications.scheduleNotificationAsync({
-        content: {
-            title: "Test Notification! ",
-            body: "This is a test local notification from goLean. It works!",
-            sound: true,
-        },
-        trigger: {
-            type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-            seconds: 5, // Triggers in 5 seconds
-        },
-    });
-    console.log('Test notification scheduled in 5 seconds.');
-};

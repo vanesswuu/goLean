@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'rea
 import * as Location from 'expo-location';
 import MapView, { Polyline, Marker } from 'react-native-maps'; // 1. Import Maps
 import { calculateDistance } from '../utils/calculations';
+import * as Notifications from 'expo-notifications';
 
 //utils
 import { formatTime } from '../utils/runCalculations';
@@ -112,7 +113,24 @@ export default function RunTrackerScreen() {
             }),
         };
         try {
-            await saveRunAPI(runData, user.token);
+            const data = await saveRunAPI(runData, user.token);
+
+            if (data.notifications && data.notifications.length > 0) {
+
+                for (const notif of data.notifications) {
+                    await Notifications.scheduleNotificationAsync({
+
+                        content: {
+                            title: notif.title,
+                            body: notif.body
+                        },
+                        trigger: null
+
+                    })
+                }
+
+            }
+
             setDistance(0);
             setTimeElapsed(0);
             setSpeed(0);

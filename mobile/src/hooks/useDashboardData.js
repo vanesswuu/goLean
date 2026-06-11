@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { calculateNutrition } from '../utils/calculations';
 import { saveLogAPI } from '../services/logService';
+import * as Notifications from 'expo-notifications';
 
 export const useDashboardData = (user) => {
     const [meals, setMeals] = useState([]);
@@ -63,7 +64,19 @@ export const useDashboardData = (user) => {
         };
 
         try {
-            await saveLogAPI(summary, user.token);
+            const data = await saveLogAPI(summary, user.token);
+
+            if (data.newMilestone) {
+                await Notifications.scheduleNotificationAsync({
+                    content: {
+                        title: data.newMilestone.title,
+                        body: data.newMilestone.body
+                    },
+                    trigger: null,
+                })
+            }
+
+
             setMeals([]);
             await AsyncStorage.removeItem(`daily_meals_${user.id}`);
             setModalVisible(false);

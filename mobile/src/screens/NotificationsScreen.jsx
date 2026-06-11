@@ -124,9 +124,9 @@ export default function NotificationsScreen() {
                 <Text style={styles.headerTitle}>Notifications</Text>
                 <TouchableOpacity
                     style={styles.testBtn}
-                    onPress={scheduleTestNotification}
+                    onPress={() => console.log('mark all as read coming soon')} //to be updated
                 >
-                    <Text>Test Notification</Text>
+                    <Text>Mark all as read</Text>
                 </TouchableOpacity>
 
             </View>
