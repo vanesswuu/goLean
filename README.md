@@ -1,4 +1,4 @@
-# 🥗 goLean
+# goLean
 
 > **Empowering the Fitness Journey through Clean Engineering.**
 > A production-ready, full-stack fitness and cardio ecosystem built for mobile scalability.
@@ -12,17 +12,17 @@ goLean is a high-performance MERN mobile application designed to help users trac
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-*   **🔒 Secure User Auth & Session Management:** Stateless login powered by **JSON Web Tokens (JWT)** and **bcrypt** password hashing, with global React Context API session management.
-*   **🏃 Real-Time GPS Workout Tracker:** Native geolocation integration (`expo-location`) to track running routes, map coordinates, and calculate precise running distance, pace, and durations in real-time.
-*   **📁 Transformation Vault (Camera API & Uploads):** Capture and upload progress photos using `expo-image-picker`, sent to the Express server using `FormData` and processed using `multer` middleware.
-*   **🔔 Persistent Notification Engine:** A database-backed notification log. Utilizes a custom global-local listener system in React Native that saves background notifications to MongoDB while updating the UI state using optimistic local badge increments.
-*   **📊 Meal & Calorie Log History:** Track daily meals and nutritional limits, with quick tab-switching and scrollable history logs connected directly to MongoDB.
+*   **Secure User Auth & Session Management:** Stateless login powered by **JSON Web Tokens (JWT)** and **bcrypt** password hashing, with global React Context API session management.
+*   **Real-Time GPS Workout Tracker:** Native geolocation integration (`expo-location`) to track running routes, map coordinates, and calculate precise running distance, pace, and durations in real-time.
+*   **Transformation Vault (Camera API & Uploads):** Capture and upload progress photos using `expo-image-picker`, sent to the Express server using `FormData` and processed using `multer` middleware.
+*   **Persistent Notification Engine:** A database-backed notification log. Utilizes a custom global-local listener system in React Native that saves background notifications to MongoDB while updating the UI state using optimistic local badge increments.
+*   **Meal & Calorie Log History:** Track daily meals and nutritional limits, with quick tab-switching and scrollable history logs connected directly to MongoDB.
 
 ---
 
-## 🛠️ Tech Stack & Libraries
+## Tech Stack & Libraries
 
 | Frontend (Mobile) | Backend (API) | Database |
 | :--- | :--- | :--- |
@@ -34,7 +34,7 @@ goLean is a high-performance MERN mobile application designed to help users trac
 
 ---
 
-## 📂 Project Architecture
+## Project Architecture
 
 ```text
 goLean/
